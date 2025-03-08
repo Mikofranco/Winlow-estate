@@ -225,6 +225,65 @@ export const DeliveryDetailsSchema = Yup.object().shape({
   checkoutCode: Yup.string(),
 });
 
+export const RecipeSchema = Yup.object().shape({
+  recipeName: Yup.string().required("Recipe name is required."),
+  category: Yup.string().required("Category is required."),
+  description: Yup.string().required("Description is required."),
+  quantityUnit: Yup.string().required("Quantity unit is required."),
+  quantity: Yup.number().required("Quantity is required.").min(0, "Quantity cannot be negative"),
+  ingredients: Yup.array().of(
+    Yup.object().shape({
+      item: Yup.string().required("Item is required"),
+      netQuantity: Yup.number()
+        .required("Net Quantity is required")
+        .min(0, "Net Quantity cannot be negative"),
+      netQuantityUnit: Yup.string().required("Net Quantity Unit is required"),
+      wasteQuantity: Yup.number()
+        .required("Waste Quantity is required")
+        .min(0, "Waste Quantity cannot be negative"),
+      wasteQuantityUnit: Yup.string().required("Waste Quantity Unit is required"),
+      // unitCost: Yup.number()
+      //   .required("Unit Cost is required")
+      //   .min(0, "Unit Cost cannot be negative"),
+      // grossQuantity: Yup.number()
+      //   .required("Gross Quantity is required")
+      //   .min(0, "Gross Quantity cannot be negative"),
+      // total: Yup.number()
+      //   .required("Total is required")
+      //   .min(0, "Total cannot be negative"),
+    })
+  )
+  .min(1, "At least one ingredient is required"),
+  prepTime: Yup.number().required("Prep time is required."),
+  prepTimeUnit: Yup.string().required("Prep time unit is required."),
+  cookingTime: Yup.number().required("Cooking time is required."),
+  cookingTimeUnit: Yup.string().required("Cooking timeUnit is required."),
+  timeToCompletion: Yup.number().required("Time to completion is required."),
+  cookingInstructions: Yup.string().required("Cooking instructions is required."),
+  aboutItem: Yup.string().required("About Item is required."),
+});
+
+export const IngredientRecipeSchema = Yup.object().shape({
+  item: Yup.string().required("Item is required"),
+  netQuantity: Yup.number()
+    .required("Net Quantity is required")
+    .min(0, "Net Quantity cannot be negative"),
+  netQuantityUnit: Yup.string().required("Net Quantity Unit is required"),
+  wasteQuantity: Yup.number()
+    .required("Waste Quantity is required")
+    .min(0, "Waste Quantity cannot be negative"),
+  wasteQuantityUnit: Yup.string().required("Waste Quantity Unit is required"),
+  // unitCost: Yup.number()
+  //   .required("Unit Cost is required")
+  //   .min(0, "Unit Cost cannot be negative"),
+  // grossQuantity: Yup.number()
+  //   .required("Gross Quantity is required")
+  //   .min(0, "Gross Quantity cannot be negative"),
+  // total: Yup.number()
+  //   .required("Total is required")
+  //   .min(0, "Total cannot be negative"),
+});
+
 export const WithdrawAmountSchema = Yup.object().shape({
   amount: Yup.number().required("Amount is required."),
 });

@@ -92,15 +92,15 @@ const EmptyState = () => (
 );
 
 const ChefInventory = () => {
-  const [selectedOrder, setSelectedOrder] = useState(INVENTORY_MENU[0]);
+  const [selectedOrder, setSelectedOrder] = useState(INVENTORY_MENU[3]);
 
   return (
     <>
       <ChefDashboardLayout>
-        <div className="w-full px-6 py-4">
+        <div className="w-full px-2 lg:px-6 py-4">
           <PageTitle title="Inventory" />
 
-          <div className="my-10 flex space-x-4">
+          <div className="w-full my-10 pb-2 flex gap-x-4 overflow-x-auto">
             <MiniTabMenu
               ordersMenu={INVENTORY_MENU}
               selectedOrder={selectedOrder}
@@ -108,7 +108,7 @@ const ChefInventory = () => {
             />
           </div>
 
-          <div className="bg-white rounded-3xl p-10 ">
+          <div className="bg-white rounded-3xl p-4 lg:p-10 ">
             {selectedOrder === INVENTORY_MENU[0] && <InventorySupply />}
             {selectedOrder === INVENTORY_MENU[1] && <InventoryInventory />}
             {selectedOrder === INVENTORY_MENU[2] && <InventoryStocktake />}

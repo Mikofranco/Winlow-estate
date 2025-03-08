@@ -441,7 +441,6 @@ const OnlineMenu = () => {
   }, []);
 
   const [q, setQ] = useState("");
-
   const searchFiltered =
     q === ""
       ? menu
@@ -486,46 +485,6 @@ const OnlineMenu = () => {
                         )
                       }
                     />
-
-                    {/* <div className="h-full flex flex-row items-center justify-center lg:justify-between gap-x-3">
-                      <Button
-                        loading={businessLoading}
-                        title={
-                          business?.status === "active"
-                            ? "Unpublish Menu"
-                            : "Publish Menu"
-                        }
-                        extraClasses={
-                          user?.image &&
-                          user?.phoneNumber &&
-                          user?.address &&
-                          user?.bio
-                            ? "!bg-[#06C167]"
-                            : "bg_ter_gray_color"
-                        }
-                        disabled={
-                          !(
-                            user?.image &&
-                            user?.phoneNumber &&
-                            user?.address &&
-                            user?.bio
-                          )
-                        }
-                        onClick={
-                          user?.image &&
-                          user?.phoneNumber &&
-                          user?.address &&
-                          user?.bio
-                            ? business?.status === "active"
-                              ? () => updateBusinessState("inactive")
-                              : () => updateBusinessState("active")
-                            : () =>
-                                setPublishError(
-                                  "Please complete your profile verification."
-                                )
-                        }
-                      />
-                    </div> */}
 
                     <button
                       className="w-fit h-full px-6 py-3 rounded-xl bg-[#06C167]"

@@ -22,6 +22,7 @@ const Input = ({
   container,
   multipleSelect,
   newName,
+  skipFirstOption
 }: // radioSelected = false,
 // radioSetSelected,
 
@@ -80,16 +81,18 @@ InputProps) => {
           value={value}
           multiple={multipleSelect}
         >
-          <option value="select">
-            Select{" "}
-            {multipleSelect
-              ? "tables"
-              : newName
-              ? newName
-              : placeholder
-              ? placeholder
-              : "a category"}
-          </option>
+          {!skipFirstOption && (
+            <option value="select">
+              Select{" "}
+              {multipleSelect
+                ? "tables"
+                : newName
+                ? newName
+                : placeholder
+                ? placeholder
+                : "a category"}
+            </option>
+          )}
           {options &&
             options?.length > 0 &&
             options?.map((option: any, i: number) => (
