@@ -10,7 +10,7 @@ const MiniTabMenu = ({
       {ordersMenu?.map((order: string) => (
         <button
           key={order}
-          className={`px-6 py-2 rounded-full text-center font-medium transition-all ${
+          className={`px-6 py-2 rounded-full text-center font-medium transition-all text-nowrap ${
             order === selectedOrder
               ? "bg-primary text-white"
               : "bg-[#EDECEC] text-black"

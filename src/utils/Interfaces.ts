@@ -49,7 +49,7 @@ export type InputProps = {
   password?: boolean;
   error?: any;
   extraClasses?: string;
-  value?: string;
+  value?: any;
   disabled?: boolean;
   readOnly?: boolean;
   accept?: any;
@@ -67,6 +67,7 @@ export type InputProps = {
   newName?: string;
   radioSelected?: any;
   radioSetSelected?: any;
+  skipFirstOption?: boolean
 };
 
 export type TextAreaProps = {

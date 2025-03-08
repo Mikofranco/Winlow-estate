@@ -166,6 +166,33 @@ export const TerminalValues = {
   whatsappNumber: "",
 };
 
+export const RecipeValues = {
+  recipeName: "",
+  category: "",
+  description: "",
+  quantity: 0,
+  quantityUnit: "",
+  ingredients: [],
+  prepTime: 0,
+  prepTimeUnit: "",
+  cookingTime: 0,
+  cookingTimeUnit: "",
+  timeToCompletion: 0,
+  cookingInstructions: "",
+  aboutItem: ""
+};
+
+export const IngredientRecipeValues = {
+  item: "",
+  netQuantity: "",
+  netQuantityUnit: "",
+  wasteQuantity: "",
+  wasteQuantityUnit: "",
+  // unitCost: "",
+  // grossQuantity: "",
+  // total: "",
+};
+
 export const NewSubscriptionMenuValues = {
   foodName: "",
   category: "",
