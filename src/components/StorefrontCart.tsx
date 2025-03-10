@@ -82,16 +82,6 @@ const StorefrontCart = ({
   const [checkoutCodeError, setCheckoutCodeError] = useState<any>();
   const [codeIsChecking, setCodeIsChecking] = useState(false);
 
-  const [openAlertModal, setOpenAlertModal] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpenAlertModal(true);
-  };
-
-  const handleClose = () => {
-    setOpenAlertModal(false);
-  };
-
   const [statesList, setStatesList] = useState([]);
   const [lgas, setLgas] = useState([]);
   const [timeList, setTimeList] = useState([]);
@@ -100,16 +90,18 @@ const StorefrontCart = ({
     let state_counter = [];
 
     if (chef?.menuDelivery.length > 0) {
-      const listStates = chef?.menuDelivery?.map((item) => {
-        if (state_counter.includes(item.delivery_city)) return
+      const listStates = chef?.menuDelivery
+        ?.map((item) => {
+          if (state_counter.includes(item.delivery_city)) return;
 
-        state_counter.push(item.delivery_city)
+          state_counter.push(item.delivery_city);
 
-        return ({
-          label: toTitleCase(item.delivery_city),
-          value: item.delivery_city,
-        });
-      }).filter(item => !!item);
+          return {
+            label: toTitleCase(item.delivery_city),
+            value: item.delivery_city,
+          };
+        })
+        .filter((item) => !!item);
       listStates && setStatesList(listStates);
     }
   }, []);
@@ -221,8 +213,6 @@ const StorefrontCart = ({
       setCodeIsChecking(false);
     }
   };
-
-  const [errorMessage, setErrorMessage] = useState<string>();
 
   const {
     values,
@@ -419,16 +409,25 @@ const StorefrontCart = ({
                                     ?.filter(
                                       (item) =>
                                         item.delivery_city === target.value
-                                    ).reduce((a, c, i) => [...a, ...c.delivery_areas.map(area => ({
-                                      label: `${toTitleCase(area).trim()} - ₦${c.delivery_fee}`,
-                                      value: area,
-                                      delivery_fee: c.delivery_fee,
-                                      parent: c._id
-                                    }))], [])
+                                    )
+                                    .reduce(
+                                      (a, c, i) => [
+                                        ...a,
+                                        ...c.delivery_areas.map((area) => ({
+                                          label: `${toTitleCase(
+                                            area
+                                          ).trim()} - ₦${c.delivery_fee}`,
+                                          value: area,
+                                          delivery_fee: c.delivery_fee,
+                                          parent: c._id,
+                                        })),
+                                      ],
+                                      []
+                                    )
                                 );
 
                                 handleChange({ target });
-                                
+
                                 setFieldValue("deliveryArea", "");
                                 setFieldValue("deliveryTime", "");
                                 setDeliveryCharge(0);
@@ -448,13 +447,16 @@ const StorefrontCart = ({
                               newName={"Area"}
                               name="deliveryArea"
                               onChange={({ target }) => {
-                                const currentState = lgas.filter(item => item.label === target.options[target.selectedIndex].text)[0];
+                                const currentState = lgas.filter(
+                                  (item) =>
+                                    item.label ===
+                                    target.options[target.selectedIndex].text
+                                )[0];
 
                                 setTimeList(
                                   chef?.menuDelivery
                                     ?.filter(
-                                      (item) =>
-                                        item._id === currentState.parent
+                                      (item) => item._id === currentState.parent
                                     )[0]
                                     .delivery_time.map((time) => ({
                                       label: toTitleCase(time),
@@ -464,8 +466,7 @@ const StorefrontCart = ({
 
                                 setDeliveryCharge(
                                   chef?.menuDelivery?.filter(
-                                    (item) =>
-                                      item._id === currentState.parent
+                                    (item) => item._id === currentState.parent
                                   )[0].delivery_fee
                                 );
 
@@ -612,7 +613,7 @@ const StorefrontCart = ({
                     Processing fee
                   </p>
                   <p className="text-lg text-[#8E8E8E] font_bold">
-                    ₦{processingFee}
+                    ₦{Number(processingFee).toFixed(2)}
                   </p>
                 </div>
                 {deliveryOption === DELIVERY_OPTIONS[0] && (
@@ -665,12 +666,6 @@ const StorefrontCart = ({
           </div>
         </div>
       </Modal>
-
-      <AlertDialog
-        message="Your email and Whatsapp number are required for online payments"
-        handleClose={handleClose}
-        open={openAlertModal}
-      />
     </div>
   );
 };
