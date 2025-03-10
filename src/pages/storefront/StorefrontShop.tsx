@@ -234,8 +234,8 @@ const StorefrontShop = () => {
         const handler = window.PaystackPop.setup({
           key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
           email: orderItem.email,
-          amount: amount * 100,
-          ref: orderId, // Use the generated order ID as a reference
+          amount: Math.round(amount * 100),
+          ref: orderId,
           metadata: {
             transactionType: "STOREFRONT_ORDER",
           },

@@ -172,7 +172,7 @@ const StorefrontMenuCard = ({
 
   return (
     <div className="w-full h-full">
-      <div className="relative w-full h-64 bg-white shadow lg:mt-0 p-2 rounded-xl cursor-pointer flex flex-col justify-between items-stretch">
+      <div className="relative w-full h-[18rem] bg-white shadow lg:mt-0 p-2 rounded-xl cursor-pointer flex flex-col justify-between items-stretch">
         <div
           className="w-full h-1/2 grow overflow-hidden mr-5 lg:m-0 qsr-shop"
           onClick={openMenuInfoModal}
