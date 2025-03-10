@@ -82,6 +82,8 @@ const StorefrontCart = ({
   const [checkoutCodeError, setCheckoutCodeError] = useState<any>();
   const [codeIsChecking, setCodeIsChecking] = useState(false);
 
+  const [menuDeliveryLocations, setMenuDeliveryLocations] = useState([]);
+
   const [openAlertModal, setOpenAlertModal] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -98,11 +100,16 @@ const StorefrontCart = ({
 
   useEffect(() => {
     if (chef?.menuDelivery.length > 0) {
-      const listStates = chef?.menuDelivery?.map((item) => ({
-        label: toTitleCase(item.delivery_city),
-        value: item.delivery_city,
-      }));
-      listStates && setStatesList(listStates);
+      const listStates = chef?.menuDelivery
+        ?.map((item) => ({
+          label: toTitleCase(item.delivery_city),
+          value: item.delivery_city,
+        }))
+        .filter(
+          (value, index, self) =>
+            index === self.findIndex((t) => t.value === value.value)
+        );
+      setStatesList(listStates);
     }
   }, []);
 
