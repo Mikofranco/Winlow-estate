@@ -20,7 +20,7 @@ import MiniTabMenu from "../../components/MiniTabMenu";
 
 const INVENTORY_MENU = [
   "Supply",
-  "Inventory",
+  "Items & Stock",
   "Stocktake",
   "Recipe",
   "Menu Profitability",
@@ -92,7 +92,7 @@ const EmptyState = () => (
 );
 
 const ChefInventory = () => {
-  const [selectedOrder, setSelectedOrder] = useState(INVENTORY_MENU[3]);
+  const [selectedOrder, setSelectedOrder] = useState(INVENTORY_MENU[0]);
 
   return (
     <>
