@@ -29,9 +29,20 @@ const Input = ({
 InputProps) => {
   const [radioSelectedState, setRadioSelectedState] = useState(false);
 
+  const todaysDate = new Date()
+    .toLocaleString("en-GB", {
+      timeZone: "Africa/Lagos",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+    .split("/")
+    .reverse()
+    .join("-");
+
   return (
     <div className={`relative my-5 ${container}`}>
-      {type !== "dropdown" && type !== "textarea" && type !== "radio" && (
+      {type !== "dropdown" && type !== "textarea" && type !== "radio" && type !== "date" && (
         <input
           type={type}
           value={value ? value : ""}
@@ -54,11 +65,27 @@ InputProps) => {
                 ? "bg-primary justify-end"
                 : "bg-[#727272] justify-start"
             }`}
-            onClick={() => setRadioSelectedState(!radioSelectedState)}
+            onClick={() => {
+              setRadioSelectedState(!radioSelectedState);
+              onChange();
+            }}
           >
             <div className="w-3 h-3 rounded-full bg-white" />
           </div>
         </div>
+      )}
+      {type === "date" && (
+        <input
+          type={type}
+          value={value ? value : ""}
+          name={name}
+          onChange={onChange}
+          onBlur={onBlur}
+          disabled={disabled}
+          onInput={onInput}
+          className={`block w-full rounded-xl border gray_border_color input_text font_medium py-4 pl-8 pr-4 sm:text-sm outline-none ${extraClasses}`}
+          min={todaysDate}
+        />
       )}
       {type === "textarea" && (
         <textarea

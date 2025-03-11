@@ -169,6 +169,61 @@ export const SuperWaiterTableInputsSchema = Yup.object().shape({
   password: Yup.string().required("Password is required."),
 });
 
+export const SupplyInputsSchema = Yup.object().shape({
+  name: Yup.string().required("Supplier name is required."),
+  phoneNumber: Yup.number().required("Phone number is required."),
+  email: Yup.string().email().required("Email is required."),
+  category: Yup.array(Yup.string()).required("Category is required."),
+  bankName: Yup.string().required("Bank name is required."),
+  bankAccountName: Yup.string().required("Bank account name is required."),
+  bankAccountNumber: Yup.number().required("Bank account number is required.")
+});
+
+export const SupplierOrderSchema = Yup.object().shape({
+  supplier: Yup.string().required("Supplier is required"),
+  deliveryDate: Yup.date().required("Delivery date is required"),
+  note: Yup.string().nullable(),
+  send: Yup.string().required("Send status is required"),
+  items: Yup.array().of(
+      Yup.object().shape({
+        item: Yup.string().required("Item is required"),
+        quantity: Yup
+          .number()
+          .positive("Quantity must be greater than 0")
+          .integer("Quantity must be a whole number")
+          .required("Quantity is required"),
+        total: Yup
+          .number()
+          .min(0, "Total must be at least 0")
+          .required("Total is required"),
+      })
+    )
+    .min(1, "At least one item is required"),
+});
+
+export const HalfInventoryItemSchema = Yup.object().shape({
+  name: Yup.string().required("Item name is required."),
+  description: Yup.string().required("Description is required."),
+  category: Yup.string().required("Category is required."),
+  unit: Yup.string().required("Unit of Measurement is required."),
+  costPerUnit: Yup.number().required("Cost Per Unit is required."),
+  reorderLevel: Yup.string().required("Reorder Level is required.")
+});
+
+export const InventoryItemSchema = Yup.object().shape({
+  name: Yup.string().required("Item name is required."),
+  description: Yup.string().required("Description is required."),
+  category: Yup.string().required("Category is required."),
+  unit: Yup.string().required("Unit of Measurement is required."),
+  costPerUnit: Yup.number().required("Cost Per Unit is required."),
+  reorderLevel: Yup.string().required("Reorder Level is required."),
+  autoReorder: Yup.boolean().default(false),
+  autoReorderReminder: Yup.boolean().default(false),
+  reorderQuantity: Yup.string().required("Reorder Quantity is required."),
+  reorderQuantityUnit: Yup.string().required("Reorder Quantity Unit is required."),
+  supplier: Yup.string().required("Supplier is required."),
+});
+
 export const ManagerInputsSchema = Yup.object().shape({
   section: Yup.array(Yup.string()).required("Section is required."),
   subTables: Yup.array(Yup.string()).required("Table is required."),

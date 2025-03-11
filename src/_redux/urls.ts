@@ -85,6 +85,10 @@ export const DINNING_MENU_CATEGORY_URL = `${BASE_API_URL}/dinning-menu-category`
 
 export const RECIPE_URL = `${BASE_API_URL}/recipe`;
 
+export const SUPPLY_URL = `${BASE_API_URL}/supplier`;
+
+export const ITEM_URL = `${BASE_API_URL}/item`;
+
 export const MENU_CATEGORY_URL = `${BASE_API_URL}/menu-category`;
 
 export const EXTRA_EMAILS_URL = `${BASE_API_URL}/chef/extra-emails`;

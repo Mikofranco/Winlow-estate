@@ -144,6 +144,8 @@ export const CHEF_ROUTES = {
   linkChefTeams: "/chef/teams",
   chefStocktake: "inventory/stocktake",
   linkChefStocktake: "/chef/inventory/stocktake",
+  chefSupplyOrder: "inventory/supply-order",
+  linkChefSupplyOrder: "/chef/inventory/supply-order",
 };
 
 export const STOREFRONT_ROUTES = {
