@@ -49,7 +49,7 @@ export type InputProps = {
   password?: boolean;
   error?: any;
   extraClasses?: string;
-  value?: string;
+  value?: any;
   disabled?: boolean;
   readOnly?: boolean;
   accept?: any;
@@ -67,6 +67,7 @@ export type InputProps = {
   newName?: string;
   radioSelected?: any;
   radioSetSelected?: any;
+  skipFirstOption?: boolean
 };
 
 export type TextAreaProps = {
@@ -81,6 +82,28 @@ export type TextAreaProps = {
 export type GoogleButtonProps = {
   extraClasses?: string;
 };
+
+export type SupplierOrderType = {
+  supplier: string,
+  deliveryDate: string,
+  note?: string,
+  send: string,
+  items: any[]
+}
+
+export type InventoryItemType = {
+  name: string,
+  description: string,
+  category: string,
+  unit: string,
+  costPerUnit: string,
+  reorderLevel: string,
+  autoReorder: boolean,
+  autoReorderReminder?: boolean,
+  reorderQuantity?: string,
+  reorderQuantityUnit?: string,
+  supplier?: string,
+}
 
 export type FormInputType = {
   type: string;
