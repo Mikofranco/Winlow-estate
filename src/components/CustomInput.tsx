@@ -22,7 +22,7 @@ const Input = ({
   container,
   multipleSelect,
   newName,
-  skipFirstOption
+  skipFirstOption,
 }: // radioSelected = false,
 // radioSetSelected,
 
@@ -42,20 +42,23 @@ InputProps) => {
 
   return (
     <div className={`relative my-5 ${container}`}>
-      {type !== "dropdown" && type !== "textarea" && type !== "radio" && type !== "date" && (
-        <input
-          type={type}
-          value={value ? value : ""}
-          name={name}
-          onChange={onChange}
-          onBlur={onBlur}
-          disabled={disabled}
-          onInput={onInput}
-          className={`block w-full rounded-xl border gray_border_color input_text font_medium py-4 pl-8 pr-4 sm:text-sm outline-none ${extraClasses}`}
-          autoComplete="off"
-          onKeyUp={onkeyup}
-        />
-      )}
+      {type !== "dropdown" &&
+        type !== "textarea" &&
+        type !== "radio" &&
+        type !== "date" && (
+          <input
+            type={type}
+            value={value}
+            name={name}
+            onChange={onChange}
+            onBlur={onBlur}
+            disabled={disabled}
+            onInput={onInput}
+            className={`block w-full rounded-xl border gray_border_color input_text font_medium py-4 pl-8 pr-4 sm:text-sm outline-none ${extraClasses}`}
+            autoComplete="off"
+            onKeyUp={onkeyup}
+          />
+        )}
       {type === "radio" && (
         <div className="flex items-center justify-between">
           <p className="text-sm">{placeholder}</p>

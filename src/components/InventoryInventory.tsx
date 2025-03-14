@@ -6,16 +6,26 @@ import Button from "./Button";
 import Input from "./CustomInput";
 import { IoMdClose } from "react-icons/io";
 import Table from "./Table";
-import { AiFillCloseCircle, AiOutlineDown, AiOutlineSearch } from "react-icons/ai";
+import {
+  AiFillCloseCircle,
+  AiOutlineDown,
+  AiOutlineSearch,
+} from "react-icons/ai";
 import { InputAdornment, TextField } from "@mui/material";
 import OutlineButton from "./OutlineButton";
 import { SERVER } from "../config/axios";
 import { ITEM_URL, SUPPLY_URL } from "../_redux/urls";
 import { shallowEqual, useSelector } from "react-redux";
 import { toTitleCase } from "../utils/formatMethods";
-import { HalfInventoryItemValues, InventoryItemValues } from "../utils/FormInitialValue";
+import {
+  HalfInventoryItemValues,
+  InventoryItemValues,
+} from "../utils/FormInitialValue";
 import { InventoryItemType } from "../utils/Interfaces";
-import { HalfInventoryItemSchema, InventoryItemSchema } from "../utils/ValidationSchema";
+import {
+  HalfInventoryItemSchema,
+  InventoryItemSchema,
+} from "../utils/ValidationSchema";
 
 const supplierColumns = [
   "SKU",
@@ -70,9 +80,7 @@ const purchaseOrdersSubOptions = [
 ];
 
 const InventoryInventory = () => {
-  const {
-    user,
-  } = useSelector(
+  const { user } = useSelector(
     (state: any) => ({
       user: state.user.user,
     }),
@@ -124,23 +132,24 @@ const InventoryInventory = () => {
     validateForm,
   } = useFormik<InventoryItemType>({
     initialValues: allowReorder ? InventoryItemValues : HalfInventoryItemValues,
-    validationSchema: allowReorder ? InventoryItemSchema : HalfInventoryItemSchema,
+    validationSchema: allowReorder
+      ? InventoryItemSchema
+      : HalfInventoryItemSchema,
     onSubmit: (values) => {
       console.log("values= ", values);
       setIsLoading(true);
-      if(editInventoryItem){
+      if (editInventoryItem) {
         updateInventoryItems(values);
-      }else{
+      } else {
         createInventoryItems(values);
       }
     },
   });
 
-  
   const [rawSuppliers, setRawSuppliers] = useState([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
 
-  const [cat, setCat] = useState('');
+  const [cat, setCat] = useState("");
   const [itemCategories, setItemCategories] = useState<any>([]);
 
   const removeCat = (cat) => {
@@ -149,7 +158,7 @@ const InventoryInventory = () => {
       .then(({ data }) => {
         console.log("handleSaveCategoryD", data);
         getItemCategories();
-        setCat('');
+        setCat("");
       })
       .catch((err) => {
         console.log(err);
@@ -161,12 +170,14 @@ const InventoryInventory = () => {
     SERVER.get(`${ITEM_URL}/category/${user?._id}`)
       .then(({ data }) => {
         console.log("handleSaveCategoryD", data);
-        if (
-          data?.items &&
-          data?.items?.length > 0
-        ) {
+        if (data?.items && data?.items?.length > 0) {
           setItemCategories(data?.items);
-          setCatList(data?.items.map(item => ({label: toTitleCase(item?.name), value: item?.name})));
+          setCatList(
+            data?.items.map((item) => ({
+              label: toTitleCase(item?.name),
+              value: item?.name,
+            }))
+          );
         }
       })
       .catch((err) => {
@@ -180,7 +191,7 @@ const InventoryInventory = () => {
       name: cat,
     })
       .then(({ data }) => {
-        setCat('');
+        setCat("");
         getItemCategories();
       })
       .catch((err) => {
@@ -188,8 +199,8 @@ const InventoryInventory = () => {
       })
       .finally(() => setIsLoadingCategories(false));
   };
-  
-  const [unit, setUnit] = useState('');
+
+  const [unit, setUnit] = useState("");
   const [itemUnits, setItemUnits] = useState<any>([]);
 
   const removeUnit = (unit) => {
@@ -198,7 +209,7 @@ const InventoryInventory = () => {
       .then(({ data }) => {
         console.log("handleSaveUnitD", data);
         getItemUnits();
-        setUnit('');
+        setUnit("");
       })
       .catch((err) => {
         console.log(err);
@@ -210,12 +221,14 @@ const InventoryInventory = () => {
     SERVER.get(`${ITEM_URL}/unit/${user?._id}`)
       .then(({ data }) => {
         console.log("handleSaveUnitD", data);
-        if (
-          data?.itemUnits &&
-          data?.itemUnits?.length > 0
-        ) {
+        if (data?.itemUnits && data?.itemUnits?.length > 0) {
           setItemUnits(data?.itemUnits);
-          setUnitList(data?.itemUnits.map(item => ({label: toTitleCase(item?.name), value: item?.name})));
+          setUnitList(
+            data?.itemUnits.map((item) => ({
+              label: toTitleCase(item?.name),
+              value: item?.name,
+            }))
+          );
         }
       })
       .catch((err) => {
@@ -229,7 +242,7 @@ const InventoryInventory = () => {
       name: unit,
     })
       .then(({ data }) => {
-        setUnit('');
+        setUnit("");
         getItemUnits();
       })
       .catch((err) => {
@@ -240,16 +253,15 @@ const InventoryInventory = () => {
 
   const getInventorySuppliers = () => {
     SERVER.get(`${SUPPLY_URL}/${user?._id}`)
-    .then(({ data }) => {
-      if (
-          data?.suppliers &&
-          data?.suppliers?.length > 0
-        ) {
-          setRawSuppliers(data?.suppliers.map(item => ({
-            id: item?._id,
-            label: toTitleCase(item?.name),
-            value: item?.name,
-          })))
+      .then(({ data }) => {
+        if (data?.suppliers && data?.suppliers?.length > 0) {
+          setRawSuppliers(
+            data?.suppliers.map((item) => ({
+              id: item?._id,
+              label: toTitleCase(item?.name),
+              value: item?.name,
+            }))
+          );
         }
       })
       .catch((err) => {
@@ -261,17 +273,14 @@ const InventoryInventory = () => {
     setEditInventoryItem(item);
     setSupplierModal(true);
     setValues(item);
-  }
+  };
 
   const getInventoryItems = () => {
     setIsLoading(true);
     SERVER.get(`${ITEM_URL}/${user?._id}`)
-    .then(({ data }) => {
-      if (
-          data?.items &&
-          data?.items?.length > 0
-        ) {
-          let tempData = data?.items.map(item => ({
+      .then(({ data }) => {
+        if (data?.items && data?.items?.length > 0) {
+          let tempData = data?.items.map((item) => ({
             id: `#${item?._id?.substring(item?._id?.length - 6)}`,
             name: item?.name,
             category: item?.category,
@@ -279,8 +288,8 @@ const InventoryInventory = () => {
             costPerUnit: item?.costPerUnit,
             totalCost: item?.totalCost || 0,
             reorderLevel: item?.reorderLevel,
-            description: `${item?.description}`
-          }))
+            description: `${item?.description}`,
+          }));
           setInventoryItems(tempData);
         }
       })
@@ -289,45 +298,48 @@ const InventoryInventory = () => {
       })
       .finally(() => setIsLoading(false));
   };
-    
-  const createInventoryItems = (items) => {
-    let tempItems = {...items};
-    if(items.supplier){
-      const tempSupplier = rawSuppliers.filter(item => item.value === items?.supplier)[0];
-      
-      tempItems = {...tempItems, supplier: tempSupplier.id};
-    }
-    SERVER.post(`${ITEM_URL}/${user?._id}`, {...tempItems})
-    .then(({ data }) => {
-      getInventoryItems();
-      resetForm();
-      closeSupplierModal();
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-    .finally(() => {
-      setIsLoading(false);
-    });
-  };
-  
-  const deleteInventoryItems = (item) => {
 
+  const createInventoryItems = (items) => {
+    let tempItems = { ...items };
+    if (items.supplier) {
+      const tempSupplier = rawSuppliers.filter(
+        (item) => item.value === items?.supplier
+      )[0];
+
+      tempItems = { ...tempItems, supplier: tempSupplier.id };
+    }
+    SERVER.post(`${ITEM_URL}/${user?._id}`, { ...tempItems })
+      .then(({ data }) => {
+        getInventoryItems();
+        resetForm();
+        closeSupplierModal();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const deleteInventoryItems = (item) => {
     SERVER.delete(`${ITEM_URL}/${user?._id}/${editInventoryItem?._id}`)
-    .then(({ data }) => {
+      .then(({ data }) => {
         getInventoryItems();
         setEditInventoryItem(null);
       })
       .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-            setIsLoading(false);
-          });
-        };
-        
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   const updateInventoryItems = (items) => {
-    SERVER.patch(`${ITEM_URL}/${user?._id}/${editInventoryItem?._id}`, {...items})
+    SERVER.patch(`${ITEM_URL}/${user?._id}/${editInventoryItem?._id}`, {
+      ...items,
+    })
       .then(({ data }) => {
         getInventoryItems();
         resetForm();
@@ -343,7 +355,6 @@ const InventoryInventory = () => {
       });
   };
 
-  
   useEffect(() => {
     getItemCategories();
     getItemUnits();
@@ -365,11 +376,11 @@ const InventoryInventory = () => {
       reorderQuantityUnit: true,
       supplier: true,
     } as FormikTouched<InventoryItemType>);
-  
+
     // Trigger validation
     const errors = await validateForm();
-    console.log('errs= ', errors);
-  }
+    console.log("errs= ", errors);
+  };
 
   return (
     <div className="">
@@ -452,7 +463,7 @@ const InventoryInventory = () => {
               className="bg-black text-white px-5 py-2 rounded-lg flex items-center space-x-2"
               onClick={openSupplierModal}
             >
-              <span>Add Item</span> 
+              <span>Add Item</span>
               {/* <AiOutlineDown /> */}
             </button>
           </div>
@@ -535,7 +546,9 @@ const InventoryInventory = () => {
               // extraClasses={'!mt-10 !lg:mt-0'}
               onChange={handleChange}
               value={values.costPerUnit}
-              error={errors.costPerUnit && touched.costPerUnit && errors.costPerUnit}
+              error={
+                errors.costPerUnit && touched.costPerUnit && errors.costPerUnit
+              }
             />
 
             <Input
@@ -544,7 +557,11 @@ const InventoryInventory = () => {
               name="reorderLevel"
               onChange={handleChange}
               value={values.reorderLevel}
-              error={errors.reorderLevel && touched.reorderLevel && errors.reorderLevel}
+              error={
+                errors.reorderLevel &&
+                touched.reorderLevel &&
+                errors.reorderLevel
+              }
             />
 
             {/* {error  && (
@@ -558,12 +575,14 @@ const InventoryInventory = () => {
               placeholder="Automate Reorder"
               name="autoReorder"
               onChange={() => {
-                console.log('first= ')
-                setAllowReorder(!values.autoReorder)
-                setFieldValue('autoReorder', !values.autoReorder);
+                console.log("first= ");
+                setAllowReorder(!values.autoReorder);
+                setFieldValue("autoReorder", !values.autoReorder);
               }}
               value={values.autoReorder}
-              error={errors.autoReorder && touched.autoReorder && errors.autoReorder}
+              error={
+                errors.autoReorder && touched.autoReorder && errors.autoReorder
+              }
             />
 
             {allowReorder && (
@@ -573,30 +592,42 @@ const InventoryInventory = () => {
                   placeholder="Automate Reorder Reminder"
                   name="autoReorderReminder"
                   onChange={() => {
-                    setFieldValue('autoReorder', !values.autoReorderReminder)
+                    setFieldValue("autoReorder", !values.autoReorderReminder);
                   }}
                   value={values.autoReorderReminder}
-                  error={errors.autoReorderReminder && touched.autoReorderReminder && errors.autoReorderReminder}
+                  error={
+                    errors.autoReorderReminder &&
+                    touched.autoReorderReminder &&
+                    errors.autoReorderReminder
+                  }
                 />
-    
+
                 <Input
                   type="text"
                   placeholder="Reorder Quantity"
                   name="reorderQuantity"
                   onChange={handleChange}
                   value={values.reorderQuantity}
-                  error={errors.reorderQuantity && touched.reorderQuantity && errors.reorderQuantity}
+                  error={
+                    errors.reorderQuantity &&
+                    touched.reorderQuantity &&
+                    errors.reorderQuantity
+                  }
                 />
-                
+
                 <Input
                   type="text"
                   placeholder="Reorder Quantity Unit"
                   name="reorderQuantityUnit"
                   onChange={handleChange}
                   value={values.reorderQuantityUnit}
-                  error={errors.reorderQuantityUnit && touched.reorderQuantityUnit && errors.reorderQuantityUnit}
+                  error={
+                    errors.reorderQuantityUnit &&
+                    touched.reorderQuantityUnit &&
+                    errors.reorderQuantityUnit
+                  }
                 />
-    
+
                 <Input
                   type="dropdown"
                   placeholder="Supplier"
@@ -609,15 +640,14 @@ const InventoryInventory = () => {
               </>
             )}
 
-
             <div className="mt-10">
               <Button
                 loading={isLoading}
-                title="Add Item"
+                title="Add"
                 extraClasses="w-full p-3 rounded-full px-8 py-2"
                 onClick={() => {
                   triggerForm();
-                  if(Object.values(errors).length < 1){
+                  if (Object.values(errors).length < 1) {
                     handleSubmit();
                   }
                 }}
@@ -636,7 +666,9 @@ const InventoryInventory = () => {
       >
         <div className="absolute top-1/2 left-1/2 w-5/6 lg:w-1/3 h-3/4 overflow-scroll -translate-y-1/2 -translate-x-1/2 bg-white rounded-3xl p-7 my-10 outline-none">
           <div className="flex">
-            <p className="flex-1 text-xl text-center font_bold black2">Categories</p>
+            <p className="flex-1 text-xl text-center font_bold black2">
+              Categories
+            </p>
 
             <IoMdClose
               size={24}
@@ -682,8 +714,6 @@ const InventoryInventory = () => {
               )}
             </div>
 
-
-
             <div className="mt-5 pt-5 absolute bottom-0 w-full flex flex-col items-stretch justify-end gap-y-10 border-t border-black/20">
               <div>
                 <p className="ml-2 mb-2">Add a new category</p>
@@ -712,8 +742,7 @@ const InventoryInventory = () => {
           </div>
         </div>
       </Modal>
-      
-      
+
       {/* UNIT */}
       <Modal
         open={unitModal}
@@ -723,7 +752,9 @@ const InventoryInventory = () => {
       >
         <div className="absolute top-1/2 left-1/2 w-5/6 lg:w-1/3 h-3/4 overflow-scroll -translate-y-1/2 -translate-x-1/2 bg-white rounded-3xl p-7 my-10 outline-none">
           <div className="flex">
-            <p className="flex-1 text-xl text-center font_bold black2">Unit of measurement</p>
+            <p className="flex-1 text-xl text-center font_bold black2">
+              Unit of measurement
+            </p>
 
             <IoMdClose
               size={24}
@@ -768,8 +799,6 @@ const InventoryInventory = () => {
                 </div>
               )}
             </div>
-
-
 
             <div className="mt-5 pt-5 absolute bottom-0 w-full flex flex-col items-stretch justify-end gap-y-10 border-t border-black/20">
               <div>

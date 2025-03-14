@@ -8,7 +8,12 @@ import { IoMdClose } from "react-icons/io";
 import Table from "./Table";
 import { AiOutlineDown, AiOutlineSearch } from "react-icons/ai";
 import OutlineButton from "./OutlineButton";
-import { dateFormatter, formatRemoteAmountKobo, generateUUIDBasedOnStringLength, uuidGen } from "../utils/formatMethods";
+import {
+  dateFormatter,
+  formatRemoteAmountKobo,
+  generateUUIDBasedOnStringLength,
+  uuidGen,
+} from "../utils/formatMethods";
 import MiniTabMenu from "./MiniTabMenu";
 import { RecipeValues } from "../utils/FormInitialValue";
 import { RecipeSchema } from "../utils/ValidationSchema";
@@ -28,31 +33,29 @@ const TABS = ["Recipe Items", "Procedure"];
 const EDIT_OPTIONS = ["Edit", "Delete"];
 
 const quantitySizes = [
-  { label : "KG", value : "KG" },
-  { label : "MG", value : "MG" },
-  { label : "G", value : "G" },
+  { label: "KG", value: "KG" },
+  { label: "MG", value: "MG" },
+  { label: "G", value: "G" },
+  { label: "Others", value: "Others" },
 ];
 
-const timeLengths= [
-  { label : "Hrs", value : "Hrs" },
-  { label : "Mins", value : "Mins" },
-  { label : "Secs", value : "Secs" },
+const timeLengths = [
+  { label: "Hrs", value: "Hrs" },
+  { label: "Mins", value: "Mins" },
+  { label: "Secs", value: "Secs" },
 ];
 
 const InventoryRecipe = () => {
-
-  const {
-    user,
-  } = useSelector(
+  const { user } = useSelector(
     (state: any) => ({
       user: state.user.user,
     }),
     shallowEqual
   );
-  
+
   const [recipeItem, setRecipeItem] = useState(null);
   const [recipeModal, setRecipeModal] = useState(false);
-  const [recipeError, setRecipeError] = useState('');
+  const [recipeError, setRecipeError] = useState("");
   const openRecipeModal = () => setRecipeModal(true);
   const closeRecipeModal = () => setRecipeModal(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -67,19 +70,20 @@ const InventoryRecipe = () => {
     setValues,
     resetForm,
     errors,
+    setErrors,
     touched,
     setTouched,
-    validateForm
+    validateForm,
   } = useFormik({
     initialValues: recipeItem ? recipeItem : RecipeValues,
     validationSchema: RecipeSchema,
     onSubmit: (values) => {
-      setIsLoading(true)
+      setIsLoading(true);
       console.log("values= ", values);
-      if(recipeItem){
-        updateInventoryRecipes(values)
-      }else{
-        addInventoryRecipes(values)
+      if (recipeItem) {
+        updateInventoryRecipes(values);
+      } else {
+        addInventoryRecipes(values);
       }
     },
   });
@@ -103,12 +107,12 @@ const InventoryRecipe = () => {
       cookingTime: true,
       cookingTimeUnit: true,
       cookingInstructions: true,
-      aboutItem: true
+      aboutItem: true,
     });
-  
+
     // Trigger validation
     const errors = await validateForm();
-  }
+  };
 
   const [dinningMenuCategories, setDinningMenuCategories] = useState<any>([]);
   const getDinningMenuCategories = () => {
@@ -127,25 +131,22 @@ const InventoryRecipe = () => {
   };
 
   const handleEditItem = (option, item) => {
-    console.log('optionsss= ', option, item);
+    console.log("optionsss= ", option, item);
     setRecipeItem(item);
-    if (option === EDIT_OPTIONS[0]){
+    if (option === EDIT_OPTIONS[0]) {
       setRecipeModal(true);
       setValues(item);
-    }else{
-      setIsLoading(true)
-      deleteInventoryRecipes(item)
+    } else {
+      setIsLoading(true);
+      deleteInventoryRecipes(item);
     }
-  }
-  
+  };
+
   const [recipes, setRecipes] = useState<any>([]);
   const getInventoryRecipes = () => {
     SERVER.get(`${RECIPE_URL}/${user?._id}`)
-    .then(({ data }) => {
-      if (
-          data?.recipes &&
-          data?.recipes?.length > 0
-        ) {
+      .then(({ data }) => {
+        if (data?.recipes && data?.recipes?.length > 0) {
           setRecipes(data?.recipes);
         }
       })
@@ -153,40 +154,40 @@ const InventoryRecipe = () => {
         console.log(err);
       });
   };
-    
+
   const addInventoryRecipes = (items) => {
-    SERVER.post(`${RECIPE_URL}/${user?._id}`, {...items})
-    .then(({ data }) => {
-      getInventoryRecipes();
-      resetForm();
-      setRecipeModal(false);
-    })
-    .catch((err) => {
-      console.log(err);
-      setRecipeError(err?.error);
-    })
-    .finally(() => {
-      setIsLoading(false);
-    });
+    SERVER.post(`${RECIPE_URL}/${user?._id}`, { ...items })
+      .then(({ data }) => {
+        getInventoryRecipes();
+        resetForm();
+        setRecipeModal(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setRecipeError(err?.error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
-  
+
   const deleteInventoryRecipes = (item) => {
     SERVER.delete(`${RECIPE_URL}/${user?._id}/${item?._id}`)
-    .then(({ data }) => {
-      getInventoryRecipes();
-      setRecipeItem(null);
-    })
-    .catch((err) => {
-      console.log(err);
-      setRecipeError(err?.error);
-    })
-    .finally(() => {
-      setIsLoading(false);
-    });
+      .then(({ data }) => {
+        getInventoryRecipes();
+        setRecipeItem(null);
+      })
+      .catch((err) => {
+        console.log(err);
+        setRecipeError(err?.error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
-    
+
   const updateInventoryRecipes = (items) => {
-    SERVER.patch(`${RECIPE_URL}/${user?._id}/${recipeItem?._id}`, {...items})
+    SERVER.patch(`${RECIPE_URL}/${user?._id}/${recipeItem?._id}`, { ...items })
       .then(({ data }) => {
         getInventoryRecipes();
         resetForm();
@@ -204,10 +205,10 @@ const InventoryRecipe = () => {
   };
 
   const addIngredient = async (items) => {
-    const newIngredients = [ ...values.ingredients, items ];
+    const newIngredients = [...values.ingredients, items];
     setFieldValue("ingredients", newIngredients);
   };
-    
+
   const removeIngredient = (index: number) => {
     const newIngredients = values.ingredients.filter((_, i) => i !== index);
     setFieldValue("ingredients", newIngredients);
@@ -217,7 +218,7 @@ const InventoryRecipe = () => {
     getInventoryRecipes();
     getDinningMenuCategories();
   }, []);
-  
+
   const [q, setQ] = useState("");
   const searchFiltered =
     q === ""
@@ -226,12 +227,12 @@ const InventoryRecipe = () => {
           (item: any) =>
             item?.category?.toString().toLowerCase().indexOf(q.toLowerCase()) >
               -1 ||
-            item?.recipeName?.toString().toLowerCase().indexOf(q.toLowerCase()) >
-              -1 ||
-            item?.quantity
+            item?.recipeName
               ?.toString()
               .toLowerCase()
-              .indexOf(q.toLowerCase()) > -1
+              .indexOf(q.toLowerCase()) > -1 ||
+            item?.quantity?.toString().toLowerCase().indexOf(q.toLowerCase()) >
+              -1
         );
 
   return (
@@ -261,7 +262,9 @@ const InventoryRecipe = () => {
             onClick={() => {
               setValues(RecipeValues);
               setRecipeItem(null);
-              openRecipeModal()
+              setRecipeError("");
+              setErrors({});
+              openRecipeModal();
             }}
           >
             <span className="text-center">Add recipe</span> <AiOutlineDown />
@@ -282,7 +285,10 @@ const InventoryRecipe = () => {
               <thead>
                 <tr className="border-b">
                   {recipeColumns.map((col, index) => (
-                    <th key={index} className="py-3 text-left text-[#7F7F7F] font-medium lg:pl-3">
+                    <th
+                      key={index}
+                      className="py-3 text-left text-[#7F7F7F] font-medium lg:pl-3"
+                    >
                       {col}
                     </th>
                   ))}
@@ -352,7 +358,8 @@ const InventoryRecipe = () => {
                                               <RadioGroup.Label
                                                 as="p"
                                                 className={`text-xs lg:text-sm secondary_gray_color text-black capitalize`}
-                                              >{item}
+                                              >
+                                                {item}
                                               </RadioGroup.Label>
                                             </div>
                                           </>
@@ -412,10 +419,12 @@ const InventoryRecipe = () => {
                 name="recipeName"
                 onChange={handleChange}
                 value={values.recipeName}
-                error={errors.recipeName && touched.recipeName && errors.recipeName}
+                error={
+                  errors.recipeName && touched.recipeName && errors.recipeName
+                }
               />
 
-              <Input 
+              <Input
                 type="dropdown"
                 placeholder="Category"
                 name="category"
@@ -441,7 +450,7 @@ const InventoryRecipe = () => {
               <div className="w-full flex flex-row items-center justify-center gap-x-3">
                 <Input
                   type="number"
-                  container={'!grow'}
+                  container={"!grow"}
                   placeholder="Quantity"
                   name="quantity"
                   onChange={handleChange}
@@ -452,54 +461,59 @@ const InventoryRecipe = () => {
                 <Input
                   type="dropdown"
                   newName="a quantity unit"
-                  extraClasses={'!w-16 !px-2'}
                   placeholder=""
                   name="quantityUnit"
                   onChange={handleChange}
                   value={values.quantityUnit}
                   options={quantitySizes}
-                  error={errors.quantityUnit && touched.quantityUnit && errors.quantityUnit}
+                  error={
+                    errors.quantityUnit &&
+                    touched.quantityUnit &&
+                    errors.quantityUnit
+                  }
                 />
               </div>
 
               <div className="border border-[#D3D3D3] my-4 " />
               <p className="flex-1 text-xl font_bold black2">Add Ingredients</p>
-              
-              {values.ingredients.length > 0 && values.ingredients.map((_, index) => (
-                <IngredientRecipe 
-                  key={index}
-                  ingredientsValues={_} 
-                  index={index} 
-                  quantitySizes={quantitySizes}
-                  isLoading={isLoading}
-                  addIngredient={addIngredient}
-                  removeIngredient={removeIngredient}
-                />
-              ))}
 
-              <IngredientRecipe 
-                ingredientsValues={false} 
+              {values.ingredients.length > 0 &&
+                values.ingredients.map((_, index) => (
+                  <IngredientRecipe
+                    key={index}
+                    ingredientsValues={_}
+                    index={index}
+                    quantitySizes={quantitySizes}
+                    isLoading={isLoading}
+                    addIngredient={addIngredient}
+                    removeIngredient={removeIngredient}
+                  />
+                ))}
+
+              <IngredientRecipe
+                ingredientsValues={false}
                 quantitySizes={quantitySizes}
                 isLoading={isLoading}
                 addIngredient={addIngredient}
                 removeIngredient={removeIngredient}
               />
 
-              {errors && Object.values(errors).length > 0  && (
+              {/* {errors && Object.values(errors).length > 0 && (
                 <>
                   <p className="text-sm text-center text-red-600 my-2">
                     Please fill the form correctly
                   </p>
                   <p className="text-sm text-center text-red-600 my-2">
-                    {Object.values(errors).join(', ')}
+                    {Object.values(errors).join(", ")}
                   </p>
                   <p className="text-sm text-center text-red-600 my-2">
-                    {values.ingredients.length < 1 && 'Add at least one ingredient to continue'}
+                    {values.ingredients.length < 1 &&
+                      "Add at least one ingredient to continue"}
                   </p>
                 </>
-              )}
-              
-              {recipeError  && (
+              )} */}
+
+              {recipeError && (
                 <>
                   <p className="text-sm text-center text-red-600 my-2">
                     {recipeError}
@@ -513,9 +527,9 @@ const InventoryRecipe = () => {
                   title={recipeItem ? "Save sub-recipe" : "Add sub-recipe"}
                   extraClasses="w-full p-3 rounded-full px-8 py-2"
                   onClick={() => {
-                    triggerForm();
-                    if(errors && Object.values(errors).length > 0){
-                      console.log('first= ', errors)
+                    if (errors && Object.values(errors).length > 0) {
+                      console.log("first= ", errors);
+                      triggerForm();
                       setSelectedTab(TABS[1]);
                     }
                   }}
@@ -529,7 +543,7 @@ const InventoryRecipe = () => {
               <div className="w-full flex flex-row items-center justify-center gap-x-3">
                 <Input
                   type="number"
-                  container={'!grow'}
+                  container={"!grow"}
                   placeholder="Prep Time"
                   name="prepTime"
                   onChange={handleChange}
@@ -540,37 +554,47 @@ const InventoryRecipe = () => {
                 <Input
                   type="dropdown"
                   newName="a time unit"
-                  extraClasses={'!w-16 !px-2'}
                   placeholder=""
                   name="prepTimeUnit"
                   onChange={handleChange}
                   value={values.prepTimeUnit}
                   options={timeLengths}
-                  error={errors.prepTimeUnit && touched.prepTimeUnit && errors.prepTimeUnit}
+                  error={
+                    errors.prepTimeUnit &&
+                    touched.prepTimeUnit &&
+                    errors.prepTimeUnit
+                  }
                 />
               </div>
-              
+
               <div className="w-full flex flex-row items-center justify-center gap-x-3">
                 <Input
                   type="number"
-                  container={'!grow'}
+                  container={"!grow"}
                   placeholder="Cooking Time"
                   name="cookingTime"
                   onChange={handleChange}
                   value={values.cookingTime}
-                  error={errors.cookingTime && touched.cookingTime && errors.cookingTime}
+                  error={
+                    errors.cookingTime &&
+                    touched.cookingTime &&
+                    errors.cookingTime
+                  }
                 />
 
                 <Input
                   type="dropdown"
                   newName="a time unit"
-                  extraClasses={'!w-16 !px-2'}
                   placeholder=""
                   name="cookingTimeUnit"
                   onChange={handleChange}
                   value={values.cookingTimeUnit}
                   options={timeLengths}
-                  error={errors.cookingTimeUnit && touched.cookingTimeUnit && errors.cookingTimeUnit}
+                  error={
+                    errors.cookingTimeUnit &&
+                    touched.cookingTimeUnit &&
+                    errors.cookingTimeUnit
+                  }
                 />
               </div>
 
@@ -586,7 +610,7 @@ const InventoryRecipe = () => {
                   errors.cookingInstructions
                 }
               />
-              
+
               <Input
                 type="text-area"
                 placeholder="About the item"
@@ -594,27 +618,26 @@ const InventoryRecipe = () => {
                 onChange={handleChange}
                 value={values.aboutItem}
                 error={
-                  errors.aboutItem &&
-                  touched.aboutItem &&
-                  errors.aboutItem
+                  errors.aboutItem && touched.aboutItem && errors.aboutItem
                 }
               />
 
-              {errors && Object.values(errors).length > 0  && (
+              {/* {errors && Object.values(errors).length > 0 && (
                 <>
                   <p className="text-sm text-center text-red-600 my-2">
                     Please fill the form correctly
                   </p>
                   <p className="text-sm text-center text-red-600 my-2">
-                    {Object.values(errors).join(', ')}
+                    {Object.values(errors).join(", ")}
                   </p>
                   <p className="text-sm text-center text-red-600 my-2">
-                    {values.ingredients.length < 1 && 'Add at least one ingredient to continue'}
+                    {values.ingredients.length < 1 &&
+                      "Add at least one ingredient to continue"}
                   </p>
                 </>
-              )}
-              
-              {recipeError  && (
+              )} */}
+
+              {recipeError && (
                 <>
                   <p className="text-sm text-center text-red-600 my-2">
                     {recipeError}
@@ -628,11 +651,11 @@ const InventoryRecipe = () => {
                   title="Save Procedure"
                   extraClasses="w-full p-3 rounded-full px-8 py-2"
                   onClick={() => {
-                    if(errors && Object.values(errors).length > 0){
-                      console.log('errsss')
+                    if (errors && Object.values(errors).length > 0) {
+                      console.log("errsss");
                       triggerForm();
                       setSelectedTab(TABS[0]);
-                    }else{
+                    } else {
                       handleSubmit();
                     }
                   }}

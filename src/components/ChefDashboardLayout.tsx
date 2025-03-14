@@ -426,21 +426,21 @@ const ChefDashboardLayout = ({ children }: DashboardLayoutProps) => {
       active: location?.pathname === CHEF_ROUTES.linkChefWallet,
       to: CHEF_ROUTES.linkChefWallet,
     },
-    {
-      icon: (
-        <BsChatDots
-          size={24}
-          color={
-            location?.pathname === CHEF_ROUTES.linkChefChat
-              ? "#06c167"
-              : "#787878"
-          }
-        />
-      ),
-      title: "Chat",
-      active: location?.pathname === CHEF_ROUTES.linkChefChat,
-      to: CHEF_ROUTES.linkChefChat,
-    },
+    // {
+    //   icon: (
+    //     <BsChatDots
+    //       size={24}
+    //       color={
+    //         location?.pathname === CHEF_ROUTES.linkChefChat
+    //           ? "#06c167"
+    //           : "#787878"
+    //       }
+    //     />
+    //   ),
+    //   title: "Chat",
+    //   active: location?.pathname === CHEF_ROUTES.linkChefChat,
+    //   to: CHEF_ROUTES.linkChefChat,
+    // },
     {
       icon: (
         <IoIosPeople
@@ -456,21 +456,21 @@ const ChefDashboardLayout = ({ children }: DashboardLayoutProps) => {
       active: location?.pathname === CHEF_ROUTES.linkChefTeams,
       to: CHEF_ROUTES.linkChefTeams,
     },
-    {
-      icon: (
-        <LuUsers
-          size={24}
-          color={
-            location?.pathname === CHEF_ROUTES.linkSubChefs
-              ? "#06c167"
-              : "#787878"
-          }
-        />
-      ),
-      title: "Sub Admins",
-      active: location?.pathname === CHEF_ROUTES.linkSubChefs,
-      to: CHEF_ROUTES.linkSubChefs,
-    },
+    // {
+    //   icon: (
+    //     <LuUsers
+    //       size={24}
+    //       color={
+    //         location?.pathname === CHEF_ROUTES.linkSubChefs
+    //           ? "#06c167"
+    //           : "#787878"
+    //       }
+    //     />
+    //   ),
+    //   title: "Sub Admins",
+    //   active: location?.pathname === CHEF_ROUTES.linkSubChefs,
+    //   to: CHEF_ROUTES.linkSubChefs,
+    // },
     {
       icon: (
         <AiFillSetting
