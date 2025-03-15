@@ -6,6 +6,7 @@ import Skeleton from "react-loading-skeleton";
 import {
   getAdminDashboardAccount,
   getAdminDashboardAccountSingle,
+  getAdminDashboardBusinesses,
   getAdminMonthlyChart,
 } from "../../_redux/user/userAction";
 import { shallowEqual, useSelector } from "react-redux";
@@ -18,6 +19,7 @@ import {
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 import { ClickAwayListener } from "@mui/material";
 import {
+  ADMIN_ALL_BUSINESSES,
   ADMIN_ALL_CUSTOMERS,
   ADMIN_ALL_ORDERS,
   ADMIN_ALL_RESTAURANTS,
@@ -92,6 +94,13 @@ const CustomTooltip = ({ payload, label }: any) => {
   return null;
 };
 
+const USER_TYPES = [
+  { label: "All", value: "All" },
+  { label: "Dropp Store", value: "Others" },
+  { label: "Dine-in", value: "Dine-in" },
+  { label: "QSR", value: "QSR" },
+];
+
 const DashboardPage = () => {
   const dispatch = useAppDispatch();
   const { user, dashboardLoading, dashboard } = useSelector(
@@ -115,6 +124,10 @@ const DashboardPage = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [currentRestaurant, setCurrentRestaurant] = useState("All");
   const [openRestaurantOptions, setOpenRestaurantOptions] = useState(false);
+
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(USER_TYPES[0]);
+  const [openUserOptions, setOpenUserOptions] = useState(false);
 
   const [totalOrders, setTotalOrders] = useState(0);
   const [totalCustomers, setTotalCustomers] = useState(0);
@@ -233,14 +246,14 @@ const DashboardPage = () => {
     try {
       // Perform all requests concurrently
       const [
-        restaurantsRes,
+        businessRes,
         ordersRes,
         customersRes,
         dashboardRes,
         exchangeRes,
         chartRes,
       ] = await Promise.all([
-        SERVER.get(ADMIN_ALL_RESTAURANTS),
+        SERVER.get(ADMIN_ALL_BUSINESSES),
         SERVER.get(ADMIN_ALL_ORDERS),
         SERVER.get(ADMIN_ALL_CUSTOMERS),
         SERVER.get(`${ADMIN_DROPP_DASHBOARD_URL}/all`),
@@ -259,7 +272,7 @@ const DashboardPage = () => {
       ]);
 
       // Handle restaurants data
-      const numOfRestaurants = restaurantsRes.data.data;
+      const numOfRestaurants = businessRes.data.data;
       console.log("Restaurants= ", numOfRestaurants);
       setRestaurants(numOfRestaurants);
       setTotalRestaurants(numOfRestaurants?.length);
@@ -298,32 +311,35 @@ const DashboardPage = () => {
 
   useEffect(() => {
     if (currentRestaurant !== "All") {
-      const restaurantId = restaurants.filter(
-        (item) => item?.business?.businessName === currentRestaurant
+      const business = restaurants.find(
+        (item) => item?.businessName === currentRestaurant
       );
+
+      console.log("business= ", business);
 
       dispatch(
-        getAdminDashboardAccountSingle(
-          startDate,
-          endDate,
-          restaurantId[0]?.profile?._id
-        )
+        getAdminDashboardAccountSingle(startDate, endDate, business?.owner?._id)
       );
-
-      setTotalRestaurants(1);
+    } else if (selectedUser.value !== "All") {
+      dispatch(
+        getAdminDashboardBusinesses(startDate, endDate, selectedUser.value)
+      );
     } else {
       dispatch(getAdminDashboardAccount(startDate, endDate));
     }
+  }, [startDate, endDate, currentRestaurant, selectedUser]);
 
-    // Call the function to fetch data
+  useEffect(() => {
     fetchData();
-  }, [startDate, endDate, currentRestaurant]);
+  }, []);
 
   const handleClickAway = (flag: string) => {
     if (flag === "restaurant") {
       setOpenRestaurantOptions(false);
     } else if (flag === "chartData") {
       setOpenCurrentChartData(false);
+    } else if (flag === "users") {
+      setOpenUserOptions(false);
     }
   };
 
@@ -448,9 +464,7 @@ const DashboardPage = () => {
 
           {/* RESTAURANTS */}
           <div className="w-full lg:w-1/5">
-            <label className="text-sm font_medium text-black">
-              Restaurants
-            </label>
+            <label className="text-sm font_medium text-black">Businesses</label>
             <div className="mt-2 lg:mt-0">
               <div
                 className="h-14 bg-[#F8F8F8] block w-full flex justify-between rounded-md border-0 p-4 text-gray-900 shadow-sm placeholder:text-gray-400 sm:text-sm sm:leading-6 cursor-pointer"
@@ -472,7 +486,7 @@ const DashboardPage = () => {
                   onClickAway={() => handleClickAway("restaurant")}
                 >
                   <div
-                    className={`absolute z-10 bg-white mb-2 w-24 lg:w-44 shadow-2xl p-2 lg:p-4 rounded-2xl secondary_gray_color text-black`}
+                    className={`absolute z-10 bg-white mb-2 w-48 h-1/4 overflow-scroll shadow-2xl p-2 lg:p-4 rounded-2xl secondary_gray_color text-black`}
                   >
                     <div
                       className="flex items-center cursor-pointer mb-2"
@@ -494,21 +508,18 @@ const DashboardPage = () => {
                         All
                       </p>
                     </div>
-                    {restaurants?.map((restaurant: any, i: number) => (
+                    {restaurants?.map((business: any, i: number) => (
                       <div
                         className="flex items-center cursor-pointer mb-2"
                         key={i}
                         onClick={() => {
-                          setCurrentRestaurant(
-                            restaurant?.business?.businessName
-                          );
+                          setCurrentRestaurant(business?.businessName);
                           setOpenRestaurantOptions(false);
                         }}
                       >
                         <div
                           className={`w-2 lg:w-4 h-2 lg:h-4 rounded-full mr-2 lg:mr-3 ${
-                            currentRestaurant ===
-                            restaurant?.business?.businessName
+                            currentRestaurant === business?.businessName
                               ? "primary_bg_color"
                               : "bg_gray_color"
                           }`}
@@ -516,7 +527,7 @@ const DashboardPage = () => {
                         <p
                           className={`text-xs lg:text-sm secondary_gray_color text-black`}
                         >
-                          {restaurant?.business?.businessName}
+                          {business?.businessName}
                         </p>
                       </div>
                     ))}
@@ -566,6 +577,60 @@ const DashboardPage = () => {
                 </svg>
                 <Tooltip id={"converter"} />
               </div>
+            </div>
+          </div>
+
+          {/* USERS */}
+          <div className="w-full lg:w-1/5">
+            <label className="text-sm font_medium text-black">Users</label>
+            <div className="mt-2 lg:mt-0">
+              <div
+                className="h-14 bg-[#F8F8F8] block w-full flex justify-between rounded-md border-0 p-4 text-gray-900 shadow-sm placeholder:text-gray-400 sm:text-sm sm:leading-6 cursor-pointer"
+                onClick={() => {
+                  setOpenUserOptions(!openUserOptions);
+                }}
+              >
+                <p className={`text-xs lg:text-sm filter_text font_medium`}>
+                  {selectedUser?.label}
+                </p>
+                {openUserOptions ? (
+                  <TiArrowSortedUp color="#8E8E8E" size={20} />
+                ) : (
+                  <TiArrowSortedDown color="#8E8E8E" size={20} />
+                )}
+              </div>
+
+              {openUserOptions && (
+                <ClickAwayListener onClickAway={() => handleClickAway("users")}>
+                  <div
+                    className={`absolute z-10 bg-white mb-2 w-24 lg:w-44 shadow-2xl p-2 lg:p-4 rounded-2xl secondary_gray_color text-black`}
+                  >
+                    {USER_TYPES?.map((userType: any, i: number) => (
+                      <div
+                        className="flex items-center cursor-pointer mb-2"
+                        key={i}
+                        onClick={() => {
+                          setSelectedUser(userType);
+                          setOpenUserOptions(false);
+                        }}
+                      >
+                        <div
+                          className={`w-2 lg:w-4 h-2 lg:h-4 rounded-full mr-2 lg:mr-3 ${
+                            selectedUser.value === userType.value
+                              ? "primary_bg_color"
+                              : "bg_gray_color"
+                          }`}
+                        />
+                        <p
+                          className={`text-xs lg:text-sm secondary_gray_color text-black`}
+                        >
+                          {userType?.label}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </ClickAwayListener>
+              )}
             </div>
           </div>
         </div>

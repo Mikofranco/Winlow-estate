@@ -31,6 +31,7 @@ import {
   updateQsrSubAdminProfile,
   changeQsrSubAdminPassword,
   getStorefrontDashboardCrud,
+  getAdminDashboardBusinessesCrud,
 } from "./userCrud";
 import {
   startCall,
@@ -166,7 +167,7 @@ export const updateProfileSubChefAccount =
       });
   };
 
-  export const updateProfileQsrSubAdminAccount =
+export const updateProfileQsrSubAdminAccount =
   (data: any, closeProfileModal?: any) => (dispatch: any) => {
     dispatch(startCall());
     return updateQsrSubAdminProfile(data)
@@ -377,21 +378,49 @@ export const changePasswordCompanyAccount =
   };
 
 export const getRestaurantDashboardAccount =
-  (fromDate = "", toDate = "", payment = "", section = "", table = "", breakdownOption) =>
+  (
+    fromDate = "",
+    toDate = "",
+    payment = "",
+    section = "",
+    table = "",
+    breakdownOption
+  ) =>
   (dispatch: any) => {
     dispatch(startDashboardCall());
-    return getRestaurantDashboardCrud(fromDate, toDate, payment, section, table, breakdownOption)
+    return getRestaurantDashboardCrud(
+      fromDate,
+      toDate,
+      payment,
+      section,
+      table,
+      breakdownOption
+    )
       .then(({ data }) => {
         dispatch(getRestaurantDashboard({ ...data?.data }));
       })
       .finally(() => dispatch(stopDashboardCall()));
   };
 
-  export const getStorefrontDashboardAccount =
-  (fromDate = "", toDate = "", payment = "", deliveryDay="",  deliveryLocation="", deliveryStatus="") =>
+export const getStorefrontDashboardAccount =
+  (
+    fromDate = "",
+    toDate = "",
+    payment = "",
+    deliveryDay = "",
+    deliveryLocation = "",
+    deliveryStatus = ""
+  ) =>
   (dispatch: any) => {
     dispatch(startDashboardCall());
-    return getStorefrontDashboardCrud(fromDate, toDate, payment, deliveryDay, deliveryLocation, deliveryStatus)
+    return getStorefrontDashboardCrud(
+      fromDate,
+      toDate,
+      payment,
+      deliveryDay,
+      deliveryLocation,
+      deliveryStatus
+    )
       .then(({ data }) => {
         dispatch(getRestaurantDashboard({ ...data?.data }));
       })
@@ -409,8 +438,7 @@ export const getQsrDashboardAccount =
       .finally(() => dispatch(stopDashboardCall()));
   };
 
-
-  export const getQsrSubAdminDashboardAccount =
+export const getQsrSubAdminDashboardAccount =
   (fromDate = "", toDate = "", payment = "", cashier = "") =>
   (dispatch: any) => {
     dispatch(startDashboardCall());
@@ -421,49 +449,73 @@ export const getQsrDashboardAccount =
       .finally(() => dispatch(stopDashboardCall()));
   };
 
-  export const getRestaurantSubChefDashboardAccount =
-  (fromDate = "", toDate = "", payment = "", section = "", table = "", breakdownOption) =>
+export const getRestaurantSubChefDashboardAccount =
+  (
+    fromDate = "",
+    toDate = "",
+    payment = "",
+    section = "",
+    table = "",
+    breakdownOption
+  ) =>
   (dispatch: any) => {
     dispatch(startDashboardCall());
-    return getRestaurantSubChefDashboardCrud(fromDate, toDate, payment, section, table, breakdownOption)
+    return getRestaurantSubChefDashboardCrud(
+      fromDate,
+      toDate,
+      payment,
+      section,
+      table,
+      breakdownOption
+    )
       .then(({ data }) => {
         dispatch(getRestaurantDashboard({ ...data?.data }));
       })
       .finally(() => dispatch(stopDashboardCall()));
   };
 
-  export const getAdminDashboardAccount =
+export const getAdminDashboardAccount =
   (fromDate = "", toDate = "", restaurant = "") =>
   (dispatch: any) => {
     dispatch(startDashboardCall());
-    console.log('rdx= ', fromDate)
+    console.log("rdx= ", fromDate);
     return getAdminDashboardCrud(fromDate, toDate, restaurant)
       .then(({ data }) => {
-        console.log('getAdminDashboard= ', data?.data )
+        console.log("getAdminDashboard= ", data?.data);
         dispatch(getAdminDashboard({ ...data?.data }));
       })
       .finally(() => dispatch(stopDashboardCall()));
   };
-  
-  export const getAdminDashboardAccountSingle =
+
+export const getAdminDashboardAccountSingle =
   (fromDate = "", toDate = "", restaurant = "") =>
   (dispatch: any) => {
     dispatch(startDashboardCall());
     return getAdminDashboardSingleCrud(fromDate, toDate, restaurant)
       .then(({ data }) => {
-        console.log('getAdminDashboardAccountSingle= ', data?.data )
+        console.log("getAdminDashboardAccountSingle= ", data?.data);
         dispatch(getAdminDashboard({ ...data?.data }));
       })
       .finally(() => dispatch(stopDashboardCall()));
   };
-  
-  export const getAdminMonthlyChart =
-  () => (dispatch: any) => {
+
+export const getAdminDashboardBusinesses =
+  (fromDate = "", toDate = "", type = "") =>
+  (dispatch: any) => {
     dispatch(startDashboardCall());
-    return getAdminChartCrud()
+    return getAdminDashboardBusinessesCrud(fromDate, toDate, type)
       .then(({ data }) => {
-        console.log('datacu= ', data)
-        dispatch(getMonthlyChart({ ...data?.data }));
+        dispatch(getAdminDashboard({ ...data?.data }));
       })
       .finally(() => dispatch(stopDashboardCall()));
   };
+
+export const getAdminMonthlyChart = () => (dispatch: any) => {
+  dispatch(startDashboardCall());
+  return getAdminChartCrud()
+    .then(({ data }) => {
+      console.log("datacu= ", data);
+      dispatch(getMonthlyChart({ ...data?.data }));
+    })
+    .finally(() => dispatch(stopDashboardCall()));
+};

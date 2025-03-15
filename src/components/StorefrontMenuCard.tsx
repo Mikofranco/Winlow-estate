@@ -251,7 +251,7 @@ const StorefrontMenuCard = ({
 
             <div className="w-40">
               <p
-                className="text-gray-400 text-xs font_regular mt-1 text-nowrap"
+                className="text-gray-400 text-base font_regular mt-1 text-nowrap mt-2"
                 onClick={openMenuInfoModal}
               >
                 {truncateText(menu?.description, 17, 20)}

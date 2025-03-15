@@ -83,6 +83,12 @@ export const DINNING_MENU_URL = `${BASE_API_URL}/dinning-menu`;
 
 export const DINNING_MENU_CATEGORY_URL = `${BASE_API_URL}/dinning-menu-category`;
 
+export const RECIPE_URL = `${BASE_API_URL}/recipe`;
+
+export const SUPPLY_URL = `${BASE_API_URL}/supplier`;
+
+export const ITEM_URL = `${BASE_API_URL}/item`;
+
 export const MENU_CATEGORY_URL = `${BASE_API_URL}/menu-category`;
 
 export const EXTRA_EMAILS_URL = `${BASE_API_URL}/chef/extra-emails`;
@@ -101,7 +107,11 @@ export const QSR_ORDER_URL = `${BASE_API_URL}/qsr-order`;
 
 export const ADMIN_DROPP_DASHBOARD_URL = `${BASE_API_URL}/admin/dropp-dashboard`;
 
+export const ADMIN_DROPP_DASHBOARD_BUSINESSES = `${BASE_API_URL}/admin/dropp-dashboard/businesses`;
+
 export const ADMIN_ALL_RESTAURANTS = `${BASE_API_URL}/admin/restaurants/all`;
+
+export const ADMIN_ALL_BUSINESSES = `${BASE_API_URL}/admin/businesses/all`;
 
 export const ADMIN_ALL_ORDERS = `${BASE_API_URL}/admin/orders/all`;
 

@@ -165,6 +165,75 @@ export const TerminalValues = {
   password: "",
   whatsappNumber: "",
 };
+    
+export const SupplierOrderValues = {
+  supplier: "",
+  deliveryDate: "",
+  note: "",
+  send: "",
+  items: []
+};
+
+export const RecipeValues = {
+  recipeName: "",
+  category: "",
+  description: "",
+  quantity: 0,
+  quantityUnit: "",
+  ingredients: [],
+  prepTime: 0,
+  prepTimeUnit: "",
+  cookingTime: 0,
+  cookingTimeUnit: "",
+  timeToCompletion: 0,
+  cookingInstructions: "",
+  aboutItem: ""
+};
+
+export const IngredientRecipeValues = {
+  item: "",
+  netQuantity: "",
+  netQuantityUnit: "",
+  wasteQuantity: "",
+  wasteQuantityUnit: "",
+  // unitCost: "",
+  // grossQuantity: "",
+  // total: "",
+};
+
+export const SupplierValues = {
+  name: "",
+  phoneNumber: "",
+  email: "",
+  category: [],
+  bankName: "",
+  bankAccountName: "",
+  bankAccountNumber: "",
+}
+
+export const HalfInventoryItemValues = {
+  name: "",
+  description: "",
+  category: "",
+  unit: "",
+  costPerUnit: "",
+  reorderLevel: "",
+  autoReorder: false
+}
+
+export const InventoryItemValues = {
+  name: "",
+  description: "",
+  category: "",
+  unit: "",
+  costPerUnit: "",
+  reorderLevel: "",
+  autoReorder: false,
+  autoReorderReminder: false,
+  reorderQuantity: "",
+  reorderQuantityUnit: "",
+  supplier: "",
+}
 
 export const NewSubscriptionMenuValues = {
   foodName: "",
