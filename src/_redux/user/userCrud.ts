@@ -11,6 +11,7 @@ import {
   QSR_ORDER_URL,
   QSR_CASHIER_URL,
   STOREFRONT_ORDER_URL,
+  ADMIN_DROPP_DASHBOARD_BUSINESSES,
 } from "../urls";
 import { SERVER } from "../../config/axios";
 
@@ -149,7 +150,9 @@ export const changeSubChefPassword = (data: any) => {
 };
 
 export const registerAQsrSubAdmin = (data: any) => {
-  return SERVER.post(`${QSR_CASHIER_URL}/admin/sub-admin/register`, { ...data });
+  return SERVER.post(`${QSR_CASHIER_URL}/admin/sub-admin/register`, {
+    ...data,
+  });
 };
 
 export const getChefQsrSubAdmins = () => {
@@ -191,9 +194,9 @@ export const getStorefrontDashboardCrud = (
   fromDate = "",
   toDate = "",
   payment = "",
-  deliveryDay = "", 
+  deliveryDay = "",
   deliveryLocation = "",
-  deliveryStatus = "",
+  deliveryStatus = ""
 ) => {
   return SERVER.get(
     `${STOREFRONT_ORDER_URL}/dashboard?fromDate=${fromDate}&toDate=${toDate}&payment=${payment}&deliveryDay=${deliveryDay}&deliveryLocation=${deliveryLocation}&deliveryStatus=${deliveryStatus}`
@@ -266,7 +269,7 @@ export const getStorefrontOrdersPage = (
   fromDate = "",
   toDate = "",
   payment = "",
-  deliveryDay = "", 
+  deliveryDay = "",
   deliveryLocation = "",
   deliveryStatus = ""
 ) => {
@@ -296,7 +299,7 @@ export const getQsrSubAdminOrdersPage = (
 ) => {
   return SERVER.get(
     `${QSR_CASHIER_URL}/sub-admin/qsr-orders?page=${page}&fromDate=${fromDate}&toDate=${toDate}&payment=${payment}&cashier=${cashier}`
-   );
+  );
 };
 
 export const downloadRestaurantReport = (
@@ -316,7 +319,7 @@ export const downloadStorefrontReport = (
   fromDate = "",
   toDate = "",
   payment = "",
-  deliveryDay = "", 
+  deliveryDay = "",
   deliveryLocation = "",
   deliveryStatus = ""
 ) => {
@@ -324,7 +327,6 @@ export const downloadStorefrontReport = (
     `${STOREFRONT_ORDER_URL}/download?fromDate=${fromDate}&toDate=${toDate}&payment=${payment}&deliveryDay=${deliveryDay}&deliveryLocation=${deliveryLocation}&deliveryStatus=${deliveryStatus}`
   );
 };
-
 
 export const downloadSubChefRestaurantReport = (
   fromDate = "",
@@ -361,7 +363,9 @@ export const getSubChefRestaurantOrdersPage = (
   table = "",
   breakdownOption = ""
 ) => {
-  return SERVER.get(`${SUB_CHEF_URL}/restaurant-orders?page=${page}&fromDate=${fromDate}&toDate=${toDate}&payment=${payment}&section=${section}&table=${table}&breakdownOption=${breakdownOption}`);
+  return SERVER.get(
+    `${SUB_CHEF_URL}/restaurant-orders?page=${page}&fromDate=${fromDate}&toDate=${toDate}&payment=${payment}&section=${section}&table=${table}&breakdownOption=${breakdownOption}`
+  );
 };
 
 export const getAdminDashboardCrud = (
@@ -381,9 +385,19 @@ export const getAdminDashboardSingleCrud = (
   toDate = "",
   restaurant = ""
 ) => {
-  console.log('crud= ', restaurant)
+  console.log("crud= ", restaurant);
   return SERVER.get(
     `${ADMIN_DROPP_DASHBOARD_URL}/${restaurant}?fromDate=${fromDate}&toDate=${toDate}&restaurantId=${restaurant}`
+  );
+};
+
+export const getAdminDashboardBusinessesCrud = (
+  fromDate = "",
+  toDate = "",
+  type = ""
+) => {
+  return SERVER.get(
+    `${ADMIN_DROPP_DASHBOARD_BUSINESSES}?fromDate=${fromDate}&toDate=${toDate}&type=${type}`
   );
 };
 
@@ -394,4 +408,3 @@ export const getAdminRestaurantsCrud = () => {
 export const getAdminChartCrud = () => {
   return SERVER.get(`${ADMIN_DROPP_DASHBOARD_URL}/chart`);
 };
-
