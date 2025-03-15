@@ -154,6 +154,8 @@ const StorefrontShop = () => {
 
   const [openAlertModal, setOpenAlertModal] = React.useState(false);
 
+  const [errorMessage, setErrorMessage] = useState<string>();
+
   const handleClickOpen = () => {
     setOpenAlertModal(true);
   };
@@ -232,8 +234,8 @@ const StorefrontShop = () => {
         const handler = window.PaystackPop.setup({
           key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
           email: orderItem.email,
-          amount: amount * 100,
-          ref: orderId, // Use the generated order ID as a reference
+          amount: Math.round(amount * 100),
+          ref: orderId,
           metadata: {
             transactionType: "STOREFRONT_ORDER",
           },
@@ -257,7 +259,8 @@ const StorefrontShop = () => {
         handlePayment(data.data.orderId);
       }
     } catch (err) {
-      handleClickOpen();
+      setErrorMessage(err?.response?.data?.error);
+
       console.log("err= ", err);
     } finally {
       setCheckoutLoading(false);
@@ -290,8 +293,8 @@ const StorefrontShop = () => {
         handleSuccess(data.data.orderId);
       }
     } catch (err) {
-      handleClickOpen();
       console.log("err= ", err);
+      setErrorMessage(err?.response?.data?.error);
     } finally {
       setCheckoutLaterLoading(false);
     }
@@ -897,11 +900,11 @@ const StorefrontShop = () => {
                 </div>
               </Modal>
 
-              <AlertDialog
-                message="An error has occured, ensure you have an internet connection."
+              {/* <AlertDialog
+                message={errorMessage}
                 handleClose={handleClose}
                 open={openAlertModal}
-              />
+              /> */}
             </div>
           ) : (
             <NotFound />

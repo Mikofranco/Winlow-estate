@@ -82,18 +82,6 @@ const StorefrontCart = ({
   const [checkoutCodeError, setCheckoutCodeError] = useState<any>();
   const [codeIsChecking, setCodeIsChecking] = useState(false);
 
-  const [menuDeliveryLocations, setMenuDeliveryLocations] = useState([]);
-
-  const [openAlertModal, setOpenAlertModal] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpenAlertModal(true);
-  };
-
-  const handleClose = () => {
-    setOpenAlertModal(false);
-  };
-
   const [statesList, setStatesList] = useState([]);
   const [lgas, setLgas] = useState([]);
   const [timeList, setTimeList] = useState([]);
@@ -225,8 +213,6 @@ const StorefrontCart = ({
       setCodeIsChecking(false);
     }
   };
-
-  const [errorMessage, setErrorMessage] = useState<string>();
 
   const {
     values,
@@ -627,7 +613,7 @@ const StorefrontCart = ({
                     Processing fee
                   </p>
                   <p className="text-lg text-[#8E8E8E] font_bold">
-                    ₦{processingFee}
+                    ₦{Number(processingFee).toFixed(2)}
                   </p>
                 </div>
                 {deliveryOption === DELIVERY_OPTIONS[0] && (
@@ -680,12 +666,6 @@ const StorefrontCart = ({
           </div>
         </div>
       </Modal>
-
-      <AlertDialog
-        message="Your email and Whatsapp number are required for online payments"
-        handleClose={handleClose}
-        open={openAlertModal}
-      />
     </div>
   );
 };
