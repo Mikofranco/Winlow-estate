@@ -360,21 +360,6 @@ const ChefDashboardLayout = ({ children }: DashboardLayoutProps) => {
     },
     {
       icon: (
-        <MdInventory
-          size={24}
-          color={
-            location?.pathname === CHEF_ROUTES.linkChefInventory
-              ? "#06c167"
-              : "#787878"
-          }
-        />
-      ),
-      title: "Inventory",
-      active: location?.pathname === CHEF_ROUTES.linkChefInventory,
-      to: CHEF_ROUTES.linkChefInventory,
-    },
-    {
-      icon: (
         <MdOutlineFoodBank
           size={28}
           color={
