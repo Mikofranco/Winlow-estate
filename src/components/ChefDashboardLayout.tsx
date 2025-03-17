@@ -426,36 +426,36 @@ const ChefDashboardLayout = ({ children }: DashboardLayoutProps) => {
     //   active: location?.pathname === CHEF_ROUTES.linkChefChat,
     //   to: CHEF_ROUTES.linkChefChat,
     // },
-    {
-      icon: (
-        <IoIosPeople
-          size={24}
-          color={
-            location?.pathname === CHEF_ROUTES.linkChefTeams
-              ? "#06c167"
-              : "#787878"
-          }
-        />
-      ),
-      title: "Teams",
-      active: location?.pathname === CHEF_ROUTES.linkChefTeams,
-      to: CHEF_ROUTES.linkChefTeams,
-    },
     // {
     //   icon: (
-    //     <LuUsers
+    //     <IoIosPeople
     //       size={24}
     //       color={
-    //         location?.pathname === CHEF_ROUTES.linkSubChefs
+    //         location?.pathname === CHEF_ROUTES.linkChefTeams
     //           ? "#06c167"
     //           : "#787878"
     //       }
     //     />
     //   ),
-    //   title: "Sub Admins",
-    //   active: location?.pathname === CHEF_ROUTES.linkSubChefs,
-    //   to: CHEF_ROUTES.linkSubChefs,
+    //   title: "Teams",
+    //   active: location?.pathname === CHEF_ROUTES.linkChefTeams,
+    //   to: CHEF_ROUTES.linkChefTeams,
     // },
+    {
+      icon: (
+        <LuUsers
+          size={24}
+          color={
+            location?.pathname === CHEF_ROUTES.linkSubChefs
+              ? "#06c167"
+              : "#787878"
+          }
+        />
+      ),
+      title: "Sub Admins",
+      active: location?.pathname === CHEF_ROUTES.linkSubChefs,
+      to: CHEF_ROUTES.linkSubChefs,
+    },
     {
       icon: (
         <AiFillSetting
