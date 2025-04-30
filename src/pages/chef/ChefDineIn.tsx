@@ -486,7 +486,7 @@ const ChefDineIn = () => {
                               All orders
                             </p>
                             <div
-                              className={`ml-2 w-6 h-6 rounded-full flex items-center justify-center ${
+                              className={`ml-2 p-2 rounded-full flex items-center justify-center ${
                                 selectedTable === "All orders"
                                   ? "bg-[#0E311B]"
                                   : "bg-white"
