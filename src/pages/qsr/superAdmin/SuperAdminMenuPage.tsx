@@ -9,7 +9,7 @@ import Button from "../../../components/Button";
 import Modal from "@mui/material/Modal";
 import { IoMdClose } from "react-icons/io";
 import Input from "../../../components/CustomInput";
-import { BiImages } from "react-icons/bi";
+import { BiImages, BiLinkAlt } from "react-icons/bi";
 import { FiChevronRight } from "react-icons/fi";
 import { DineInNewMenuValues } from "../../../utils/FormInitialValue";
 import { useFormik } from "formik";
@@ -34,6 +34,7 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import { AiFillCloseCircle } from "react-icons/ai";
@@ -105,6 +106,20 @@ const SuperAdminMenuPage = () => {
 
   const [editMenu, setEditMenu] = useState<any>();
   const [copyMenu, setCopyMenu] = useState<any>();
+
+  const [alertPresent, setAlertPresent] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);
+
+  const handleCloseAlert = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenAlert(false);
+  };
 
   const [menuModal, setMenuModal] = useState(false);
   const openMenuModal = () => setMenuModal(true);
@@ -268,14 +283,13 @@ const SuperAdminMenuPage = () => {
       <QsrDashboardLayout>
         <>
           <div className="w-full px-2 lg:px-6 py-4">
-            {/* <div className="lg:flex flex-row w-full justify-between">
-              
+            <div className="lg:flex flex-row w-full justify-end">
               {business && (
                 <div className="">
-                  <div className="flex flex-col lg:flex-row justify-between gap-y-2 lg:gap-y-0">
+                  <div className="flex flex-col lg:flex-row justify-between gap-x-5 gap-y-2 lg:gap-y-0">
                     <OutlineButton
                       title="Preview Menu"
-                      extraClasses="px-8 py-2 mr-3"
+                      extraClasses="px-8 py-2"
                       onClick={() =>
                         window.open(
                           `/preview/restaurant/${formatBusinessNameLink(
@@ -285,43 +299,22 @@ const SuperAdminMenuPage = () => {
                         )
                       }
                     />
-                    <Button
-                      loading={businessLoading}
-                      title={
-                        business?.status === "active"
-                          ? "Unpublish Menu"
-                          : "Publish Menu"
-                      }
-                      extraClasses={
-                        user?.image &&
-                        user?.phoneNumber &&
-                        user?.address &&
-                        user?.bio
-                          ? ""
-                          : "bg_ter_gray_color"
-                      }
-                      disabled={
-                        !(
-                          user?.image &&
-                          user?.phoneNumber &&
-                          user?.address &&
-                          user?.bio
-                        )
-                      }
-                      onClick={
-                        user?.image &&
-                        user?.phoneNumber &&
-                        user?.address &&
-                        user?.bio
-                          ? business?.status === "active"
-                            ? () => updateBusinessState("inactive")
-                            : () => updateBusinessState("active")
-                          : () =>
-                              setPublishError(
-                                "Please complete your profile verification."
-                              )
-                      }
-                    />
+                    <div
+                      className="w-fit h-full px-6 py-3 rounded-xl bg-[#06C167]"
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `${window.location.protocol}//${
+                            window.location.host
+                          }/qsr/explore/${formatBusinessNameLink(
+                            business?.businessName
+                          )}`
+                        );
+                        setAlertPresent("Url copied to clipboard!");
+                        setOpenAlert(true);
+                      }}
+                    >
+                      <BiLinkAlt size={30} color="#fff" />
+                    </div>
                   </div>
                   {publishError && (
                     <p className="mt-2 text-sm text-center text-red-600">
@@ -330,39 +323,38 @@ const SuperAdminMenuPage = () => {
                   )}
                 </div>
               )}
-            </div> */}
+            </div>
 
             <div className="bg-white rounded-2xl w-full py-10 px-5 mt-3">
               {dinningMenu && dinningMenu?.length > 0 ? (
                 <>
                   <div className="inline-flex flex-col lg:flex-row w-full justify-between gap-y-3">
                     <div className="inline-flex flex-row">
-                        <div className="flex flex-col lg:flex-row justify-between items-center gap-y-3 lg:gap-y-0 lg:gap-x-5">
-                            <div className="w-full lg:w-fit flex flex-row justify-between items-center lg:justify-start lg:gap-x-5">
-
-                                <h1 className="text-xl text-black font_medium mt-1.5 text-center lg:text-start w-full lg:w-fit">
-                                    Menu Board
-                                </h1>
-                            </div>
-
-                            <div className="flex gap-3">
-                                <div className="w-fit bg-white rounded-full pl-18 pr-5 flex items-center justify-between border border-neutral-200">
-                                    <div className="p-2">
-                                    <IoSearchSharp color="#D6D6D6" size={20} />
-                                    </div>
-                                    <div className="flex-1 ml-4">
-                                    <input
-                                        placeholder="Search Menu"
-                                        className="py-2 w-full lg:w-64 rounded-full input_text text-md font_regular outline-none"
-                                        value={q}
-                                        onChange={(e: any) => {
-                                        setQ(e.target.value);
-                                        }}
-                                    />
-                                    </div>
-                                </div>
-                            </div>
+                      <div className="flex flex-col lg:flex-row justify-between items-center gap-y-3 lg:gap-y-0 lg:gap-x-5">
+                        <div className="w-full lg:w-fit flex flex-row justify-between items-center lg:justify-start lg:gap-x-5">
+                          <h1 className="text-xl text-black font_medium mt-1.5 text-center lg:text-start w-full lg:w-fit">
+                            Menu Board
+                          </h1>
                         </div>
+
+                        <div className="flex gap-3">
+                          <div className="w-fit bg-white rounded-full pl-18 pr-5 flex items-center justify-between border border-neutral-200">
+                            <div className="p-2">
+                              <IoSearchSharp color="#D6D6D6" size={20} />
+                            </div>
+                            <div className="flex-1 ml-4">
+                              <input
+                                placeholder="Search Menu"
+                                className="py-2 w-full lg:w-64 rounded-full input_text text-md font_regular outline-none"
+                                value={q}
+                                onChange={(e: any) => {
+                                  setQ(e.target.value);
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     <div className="flex flex-col lg:flex-row justify-between items-center gap-y-2 lg:gap-y-0 lg:gap-x-3">
@@ -580,7 +572,7 @@ const SuperAdminMenuPage = () => {
                   type="text"
                   placeholder="Portion size: E.g plate, 10 liter bowl, 5 liter bowl"
                   name="portion"
-                  extraClasses={'!mt-10 !lg:mt-0'}
+                  extraClasses={"!mt-10 !lg:mt-0"}
                   onChange={handleChange}
                   value={values.portion}
                   error={errors.portion && touched.portion && errors.portion}
@@ -970,6 +962,13 @@ const SuperAdminMenuPage = () => {
               </div>
             </div>
           </Modal>
+          <Snackbar
+            open={openAlert}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            autoHideDuration={6000}
+            onClose={handleCloseAlert}
+            message={alertPresent}
+          />
         </>
       </QsrDashboardLayout>
     </>

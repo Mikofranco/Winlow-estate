@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
 import { useSelector, shallowEqual } from "react-redux";
-import { AiFillDelete } from "react-icons/ai";
 import Button from "./Button";
-import OutlineButton from "./OutlineButton";
 import Input from "./CustomInput";
-import { QsrCheckoutValues, RestaurantCheckoutValues } from "../utils/FormInitialValue";
-import { QsrCheckoutSchema, RestaurantCheckoutSchema } from "../utils/ValidationSchema";
+import { QsrCheckoutValues } from "../utils/FormInitialValue";
+import { QsrCheckoutSchema } from "../utils/ValidationSchema";
 import axios from "axios";
 import { CHECKOUT_CODE_URL } from "../_redux/urls";
 import {
@@ -15,11 +12,7 @@ import {
   handlePhoneNumber,
   truncateText,
 } from "../utils/formatMethods";
-import { useAppDispatch } from "../redux/hooks";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Modal } from "@mui/material";
-import RestaurantShopMenuCard from "./RestaurantShopMenuCard";
-import RestaurantShopCartMenuCard from "./RestaurantShopCartMenuCard";
 import AlertDialog from "./AlertDialog";
 
 const deliveryFormInputs = [
@@ -192,7 +185,7 @@ const QsrCart = ({
     onSubmit: (values) => {
       // openPayNowModal();
 
-      handleCheckout({
+      handlePayLaterCheckout({
         order: cartOrder,
         totalAmount: totalAmount,
         discountAmount,
@@ -203,11 +196,11 @@ const QsrCart = ({
     },
   });
 
-//   useEffect(() => {
-//     if (cartMenu.length < 1) {
-//       setCartModal(false);
-//     }
-//   }, [cartMenu]);
+  //   useEffect(() => {
+  //     if (cartMenu.length < 1) {
+  //       setCartModal(false);
+  //     }
+  //   }, [cartMenu]);
 
   return (
     <div className="box-border w-full h-full bg-neutral-100 lg:bg-white py-1 lg:py-6 lg:px-2 shadow scroller flex flex-col items-stretch justify-start">
@@ -225,127 +218,149 @@ const QsrCart = ({
 
       <div className="grow w-full flex flex-col justify-start items-stretch">
         <div className="w-full flex flex-row items-center justify-between py-3 bg-white px-2">
-            <p className="text-xl font-semibold font_regular">
-                {cartMenu?.length} Item{cartMenu?.length > 1 && "s"}
-            </p>
+          <p className="text-xl font-semibold font_regular">
+            {cartMenu?.length} Item{cartMenu?.length > 1 && "s"}
+          </p>
 
-            <p className="text-xl font-bold font_bold">
-                ₦{formatPrice(totalAmount)}
-            </p>
+          <p className="text-xl font-bold font_bold">
+            ₦{formatPrice(totalAmount)}
+          </p>
         </div>
         {cartView && (
           <div className="w-full grow flex flex-col items-stretch justify-start">
             {cartMenu.length > 0 ? (
-                <>
-                    <div className="w-full h-[30vh] lg:h-[35vh] mt-5 flex flex-col justify-start items-center gap-y-2 px-2 lg:px-1 overflow-y-auto">
-                    {cartMenu &&
-                        cartMenu?.length > 0 &&
-                        cartMenu?.map((meal: any, index: number) => {
-                        return (
-                            <div key={index} className="w-full bg-white p-1">
-                              <div
-                                  className="h-16 w-full flex flex-row justify-between gap-x-2"
-                                  key={index}
-                              >
-                                  <div className="w-1/5">
-                                  <img
-                                      src={meal.images[0]}
-                                      alt="meal"
-                                      className="h-full w-full rounded object-center object-cover"
-                                  />
-                                  </div>
+              <>
+                <div className="w-full h-[30vh] lg:h-[35vh] mt-5 flex flex-col justify-start items-center gap-y-2 px-2 lg:px-1 overflow-y-auto">
+                  {cartMenu &&
+                    cartMenu?.length > 0 &&
+                    cartMenu?.map((meal: any, index: number) => {
+                      return (
+                        <div key={index} className="w-full bg-white p-1">
+                          <div
+                            className="h-16 w-full flex flex-row justify-between gap-x-2"
+                            key={index}
+                          >
+                            <div className="w-1/5">
+                              <img
+                                src={meal.images[0]}
+                                alt="meal"
+                                className="h-full w-full rounded object-center object-cover"
+                              />
+                            </div>
 
-                                  <div className="w-4/5 h-full flex flex-row items-center justify-between gap-x-2">
-                                  {/* NAME & PRICE */}
-                                  <div className="h-full w-1/2 text-start flex flex-col items-start justify-around">
-                                      <p className="text-xs lg:text-sm input_text capitalize font-medium ">
-                                      {truncateText(meal?.foodName, 25, 23)}
-                                      </p>
-                                      <p className="text-sm lg:text-base pt-1 font-bold">
-                                      ₦
-                                      {meal?.discount
-                                          ? (meal.price -
-                                              (meal.price / 100) * meal.discount) *
-                                          meal.quantity
-                                          : meal.price * meal.quantity}
-                                      </p>
-                                  </div>
-
-                                  {/* BUTTON */}
-                                  <div className="h-full w-1/2 flex items-center justify-end">
-                                      <div className="mr-3 flex flex-row w-28 justify-between items-center gap-x-3 rounded-full solid_border h-10 p-3">
-                                      <p
-                                          className="primary_txt_color font-bold cursor-pointer"
-                                          onClick={() =>
-                                          handleDecrement(meal, meal?.minimumQuantity)
-                                          }
-                                      >
-                                          -
-                                      </p>
-                                      <p className="font-bold">{meal?.quantity}</p>
-                                      <p
-                                          className="primary_txt_color font-bold cursor-pointer"
-                                          onClick={() => handleIncrement(meal)}
-                                      >
-                                          +
-                                      </p>
-                                      </div>
-                                  </div>
-                                  </div>
+                            <div className="w-4/5 h-full flex flex-row items-center justify-between gap-x-2">
+                              {/* NAME & PRICE */}
+                              <div className="h-full w-1/2 text-start flex flex-col items-start justify-around">
+                                <p className="text-xs lg:text-sm input_text capitalize font-medium ">
+                                  {truncateText(meal?.foodName, 25, 23)}
+                                </p>
+                                <p className="text-sm lg:text-base pt-1 font-bold">
+                                  ₦
+                                  {meal?.discount
+                                    ? (meal.price -
+                                        (meal.price / 100) * meal.discount) *
+                                      meal.quantity
+                                    : meal.price * meal.quantity}
+                                </p>
                               </div>
 
-                              {showMinimumQuantityReached && selectedMealQuantityReached === meal && (
-                                <p className="mt-2 text-sm text-center text-red-600">
-                                    Minimum quantity is {meal?.minimumQuantity}
-                                </p>
-                              )}
+                              {/* BUTTON */}
+                              <div className="h-full w-1/2 flex items-center justify-end">
+                                <div className="mr-3 flex flex-row w-28 justify-between items-center gap-x-3 rounded-full solid_border h-10 p-3">
+                                  <p
+                                    className="primary_txt_color font-bold cursor-pointer"
+                                    onClick={() =>
+                                      handleDecrement(
+                                        meal,
+                                        meal?.minimumQuantity
+                                      )
+                                    }
+                                  >
+                                    -
+                                  </p>
+                                  <p className="font-bold">{meal?.quantity}</p>
+                                  <p
+                                    className="primary_txt_color font-bold cursor-pointer"
+                                    onClick={() => handleIncrement(meal)}
+                                  >
+                                    +
+                                  </p>
+                                </div>
+                              </div>
                             </div>
-                        );
-                        })}
+                          </div>
+
+                          {showMinimumQuantityReached &&
+                            selectedMealQuantityReached === meal && (
+                              <p className="mt-2 text-sm text-center text-red-600">
+                                Minimum quantity is {meal?.minimumQuantity}
+                              </p>
+                            )}
+                        </div>
+                      );
+                    })}
+                </div>
+
+                <div className="grow flex flex-col justify-between w-full mx-auto px-2 lg:px-1 ">
+                  <div>
+                    <div>
+                      <h5 className="font_medium font-semibold">
+                        Customer details
+                      </h5>
+                      <p className="font_regular text-sm">
+                        Enter the customer details below.
+                      </p>
                     </div>
 
-                    <div className="grow flex flex-col justify-between w-full mx-auto px-2 lg:px-1 ">
-                      <div>
-                        <div>
-                          <h5 className="font_medium font-semibold">Customer details</h5>
-                          <p className="font_regular text-sm">
-                            Enter the customer details below.
-                          </p>
-                        </div>
-
-                        <div className="">
-                          {deliveryFormInputs?.map((input, i) => (
-                            <Input
-                              key={i}
-                              type={input?.type}
-                              placeholder={input?.placeholder}
-                              name={input?.name}
-                              onChange={handleChange}
-                              value={values[input.name as keyof typeof values]}
-                              onkeyup={handlePhoneNumber}
-                              error={
-                                errors[input?.name as keyof typeof values] &&
-                                touched[input?.name as keyof typeof values] &&
-                                errors[input?.name as keyof typeof values]
-                              }
-                            />
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col items-center justify-between gap-y-3">
-                        <Button
-                          title="Paid"
-                          loading={checkoutLoading}
-                          extraClasses="w-full p-3 rounded-full px-8 py-2"
-                          onClick={() => {
-                            handleSubmit();
-                          }}
+                    <div className="">
+                      {deliveryFormInputs?.map((input, i) => (
+                        <Input
+                          key={i}
+                          type={input?.type}
+                          placeholder={input?.placeholder}
+                          name={input?.name}
+                          onChange={handleChange}
+                          value={values[input.name as keyof typeof values]}
+                          onkeyup={handlePhoneNumber}
+                          error={
+                            errors[input?.name as keyof typeof values] &&
+                            touched[input?.name as keyof typeof values] &&
+                            errors[input?.name as keyof typeof values]
+                          }
                         />
-                      </div>
+                      ))}
                     </div>
+                  </div>
 
-                    {/* <div className="w-full mt-5 flex flex-col justify-start items-center gap-y-2">
+                  <div className="flex flex-col items-center justify-between gap-y-3">
+                    {/* <Button
+                      title="Pay Now"
+                      loading={checkoutLoading}
+                      extraClasses="w-full p-3 rounded-full px-8 py-2"
+                      onClick={() => {
+                        handleSubmit();
+                      }}
+                    /> */}
+
+                    <Button
+                      title="Pay with POS"
+                      loading={checkoutLaterLoading}
+                      extraClasses="w-full p-3 rounded-full px-8 py-2"
+                      onClick={() => {
+                        handlePayLaterCheckout({
+                          ...values,
+                          order: cartOrder,
+                          totalAmount,
+                          discountAmount,
+                          quick_service: chef?.profile?._id,
+                          cartMenu,
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* <div className="w-full mt-5 flex flex-col justify-start items-center gap-y-2">
                     {cartMenu?.length > 0 && (
                         <>
                         <div className="py-6 w-full px-2">
@@ -373,11 +388,11 @@ const QsrCart = ({
                         </>
                     )}
                     </div> */}
-                </>
-            ): (
-                <div className="w-full h-full flex flex-col items-center justify-center">
-                    <p className="text-xl">Nothing to see here...</p>
-                </div>
+              </>
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center">
+                <p className="text-xl">Nothing to see here...</p>
+              </div>
             )}
           </div>
         )}
