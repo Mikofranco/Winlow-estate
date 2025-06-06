@@ -16,7 +16,11 @@ import { MdFastfood } from "react-icons/md";
 import ChefShopMenuCard from "../../components/ChefShopMenuCard";
 import ChefsReviews from "../../components/ChefsReviews";
 import Cart from "../../components/Cart";
-import { createARestaurantOrder, editARestaurantOrder } from "../../_redux/order/orderCrud";
+import {
+  createAQsrOrder,
+  createARestaurantOrder,
+  editARestaurantOrder,
+} from "../../_redux/order/orderCrud";
 import {
   getABusinessRestaurantByName,
   getABusinessRestaurantOrderByName,
@@ -72,7 +76,7 @@ const QsrShop = () => {
 
   const [chef, setChef] = useState<any>(null);
   const [receiptValues, setReceiptValues] = useState({});
-  const [orderId, setOrderId] = useState<any>('')
+  const [orderId, setOrderId] = useState<any>("");
 
   const [chefRecommendedMenu, setChefRecommendedMenu] = useState<any>(null);
 
@@ -204,7 +208,7 @@ const QsrShop = () => {
         `${TRANSACTION_URL}/verify/${referenceId}`
       );
       const result = data?.data;
-      
+
       if (result?.status) {
         closeVerifyPaymentModal();
         openModal();
@@ -222,9 +226,9 @@ const QsrShop = () => {
 
     try {
       const createOrEditOrder = async () => {
-        return await createARestaurantOrder({ ...orderItem, table });
+        return await createAQsrOrder({ ...orderItem });
       };
-    
+
       const handlePayment = (orderId: string) => {
         const handler = window.PaystackPop.setup({
           key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
@@ -232,7 +236,7 @@ const QsrShop = () => {
           amount: amount * 100,
           ref: orderId, // Use the generated order ID as a reference
           metadata: {
-            transactionType: "RESTAURANT_ORDER",
+            transactionType: "QSR_ORDER",
           },
           onClose: () => alert("Transaction was not completed, window closed."),
           callback: (response: any) => {
@@ -244,22 +248,21 @@ const QsrShop = () => {
             verifyTransaction(orderId);
           },
         });
-    
+
         handler.openIframe();
       };
-    
+
       const { data } = await createOrEditOrder();
-    
+
       if (data.success) {
         handlePayment(data.data.orderId);
       }
     } catch (err) {
       handleClickOpen();
-      console.log('err= ', err)
+      console.log("err= ", err);
     } finally {
       setCheckoutLoading(false);
     }
-        
   };
 
   const handlePayLaterCheckout = async (orderItem: any) => {
@@ -267,13 +270,13 @@ const QsrShop = () => {
 
     try {
       const createOrEditOrder = async () => {
-        return await createARestaurantOrder({
+        return await createAQsrOrder({
           ...orderItem,
-          table,
+          salesType: "online",
           posPayment: true,
         });
       };
-    
+
       const handleSuccess = (orderId: string) => {
         resetCartView();
         dispatch(clearCart());
@@ -281,19 +284,18 @@ const QsrShop = () => {
         setOrderId(orderId);
         openModal();
       };
-    
+
       const { data } = await createOrEditOrder();
-    
+
       if (data.success) {
         handleSuccess(data.data.orderId);
       }
     } catch (err) {
       handleClickOpen();
-      console.log('err= ', err)
+      console.log("err= ", err);
     } finally {
       setCheckoutLaterLoading(false);
     }
-    
   };
 
   const handleIncrement = (meal: any) => {
@@ -366,18 +368,27 @@ const QsrShop = () => {
     )
     .reduce((partialSum: any, a: any) => partialSum + a, 0);
 
-    const [q, setQ] = useState("");
+  const [q, setQ] = useState("");
 
-    const categoryFiltered = selectedCategory === "All" ? chef?.menu : chef?.menu.filter(item => item.category === selectedCategory)
-  
-    const searchFiltered = q === ""
+  const categoryFiltered =
+    selectedCategory === "All"
+      ? chef?.menu
+      : chef?.menu.filter((item) => item.category === selectedCategory);
+
+  const searchFiltered =
+    q === ""
       ? categoryFiltered
-      : categoryFiltered.filter((item: any) =>
-        item?.category?.toString().toLowerCase().indexOf(q.toLowerCase()) > -1 ||
-        item?.foodName?.toString().toLowerCase().indexOf(q.toLowerCase()) > -1 ||
-        item?.description?.toString().toLowerCase().indexOf(q.toLowerCase()) > -1
-      );
-
+      : categoryFiltered.filter(
+          (item: any) =>
+            item?.category?.toString().toLowerCase().indexOf(q.toLowerCase()) >
+              -1 ||
+            item?.foodName?.toString().toLowerCase().indexOf(q.toLowerCase()) >
+              -1 ||
+            item?.description
+              ?.toString()
+              .toLowerCase()
+              .indexOf(q.toLowerCase()) > -1
+        );
 
   return (
     <>
@@ -456,12 +467,24 @@ const QsrShop = () => {
                         </div>
                       </div>
 
-                      <div className={`w-fit h-fit rounded-2xl  border border-[#06C167] p-3 cursor-pointer lg:hidden top-[4.2rem] right-2 z-50 ${cartMenu && cartMenu?.length ? 'bg-[#EDFFF6] fixed' : 'bg-[#F3F3F3]'}`} onClick={() => setCartModal(true)}>
+                      <div
+                        className={`w-fit h-fit rounded-2xl  border border-[#06C167] p-3 cursor-pointer lg:hidden top-[4.2rem] right-2 z-50 ${
+                          cartMenu && cartMenu?.length
+                            ? "bg-[#EDFFF6] fixed"
+                            : "bg-[#F3F3F3]"
+                        }`}
+                        onClick={() => setCartModal(true)}
+                      >
                         <span className="relative w-fit h-fit">
-                            <BsFillHandbagFill size={30} className={`text-[#06C167]`} />
-                            <span className="absolute top-0 right-0 h-4 w-4 flex items-center justify-center rounded-full border border-white bg-[#06C167]">
-                                <p className="text-[8px] text-white">{cartMenu?.length}</p>
-                            </span>
+                          <BsFillHandbagFill
+                            size={30}
+                            className={`text-[#06C167]`}
+                          />
+                          <span className="absolute top-0 right-0 h-4 w-4 flex items-center justify-center rounded-full border border-white bg-[#06C167]">
+                            <p className="text-[8px] text-white">
+                              {cartMenu?.length}
+                            </p>
+                          </span>
                         </span>
                       </div>
 
@@ -561,30 +584,36 @@ const QsrShop = () => {
                     <div className="pb-20 px-2 lg:pl-10 lg:pr-0">
                       <div className="grid grid-cols-1 lg:grid-cols-3 justify-center items-stretch gap-5 w-full flex-wrap mt-7 lg:px-2">
                         {searchFiltered?.map((menu: any) => (
-                        <React.Fragment key={menu?._id}>
+                          <React.Fragment key={menu?._id}>
                             <QsrShopMenuCard
-                                menu={menu}
-                                mode={"dineIn"}
-                                onClickEdit={() => {
-                                    setEditMenu(menu);
-                                    openMenuModal();
-                                    setValues(menu);
-                                }}
-                                onClickCopy={() => {
-                                    setCopyMenu(menu);
-                                    openCopyMenuModal();
-                                    setValues(menu);
-                                }}
-                                inCart={cartMenu?.find((m: any) => m._id === menu._id)}
-                                onClickAddToBag={() => handleAddToBag(menu)}
-                                cartMenu={cartMenu}
-                                handleIncrement={handleIncrement}
-                                handleDecrement={handleDecrement}
-                                selectedMealQuantityReached={selectedMealQuantityReached}
-                                showMinimumQuantityReached={showMinimumQuantityReached}
-                                addMenuError={addMenuError}
+                              menu={menu}
+                              mode={"dineIn"}
+                              onClickEdit={() => {
+                                setEditMenu(menu);
+                                openMenuModal();
+                                setValues(menu);
+                              }}
+                              onClickCopy={() => {
+                                setCopyMenu(menu);
+                                openCopyMenuModal();
+                                setValues(menu);
+                              }}
+                              inCart={cartMenu?.find(
+                                (m: any) => m._id === menu._id
+                              )}
+                              onClickAddToBag={() => handleAddToBag(menu)}
+                              cartMenu={cartMenu}
+                              handleIncrement={handleIncrement}
+                              handleDecrement={handleDecrement}
+                              selectedMealQuantityReached={
+                                selectedMealQuantityReached
+                              }
+                              showMinimumQuantityReached={
+                                showMinimumQuantityReached
+                              }
+                              addMenuError={addMenuError}
                             />
-                        </React.Fragment>
+                          </React.Fragment>
                         ))}
                       </div>
 
@@ -599,10 +628,10 @@ const QsrShop = () => {
                     <div className="h-full w-full">
                       <QsrCart
                         handleCheckout={(orderItem: any) =>
-                            handleCheckout(orderItem)
+                          handleCheckout(orderItem)
                         }
                         handlePayLaterCheckout={(orderItem: any) =>
-                            handlePayLaterCheckout(orderItem)
+                          handlePayLaterCheckout(orderItem)
                         }
                         checkoutLoading={checkoutLoading}
                         checkoutLaterLoading={checkoutLaterLoading}
@@ -619,7 +648,9 @@ const QsrShop = () => {
                         reviewView={reviewView}
                         setReviewView={setReviewView}
                         handleDelete={handleDelete}
-                        selectedMealQuantityReached={selectedMealQuantityReached}
+                        selectedMealQuantityReached={
+                          selectedMealQuantityReached
+                        }
                         showMinimumQuantityReached={showMinimumQuantityReached}
                         addMenuError={addMenuError}
                         setAddMenuError={setAddMenuError}
@@ -635,7 +666,7 @@ const QsrShop = () => {
                 </div>
               </div>
 
-              <Footer shop={true}  logo={Images.logo} />
+              <Footer shop={true} logo={Images.logo} />
 
               <Modal
                 open={cartModal}
@@ -644,42 +675,41 @@ const QsrShop = () => {
                 aria-describedby="parent-modal-description"
               >
                 <div className="fixed right-0 z-10 h-full w-full lg:w-1/3 bg-neutral-100 lg:bg-white overflow-auto outline-none">
-                    <QsrCart
-                      handleCheckout={(orderItem: any) =>
-                          handleCheckout(orderItem)
-                      }
-                      handlePayLaterCheckout={(orderItem: any) =>
-                          handlePayLaterCheckout(orderItem)
-                      }
-                      checkoutLoading={checkoutLoading}
-                      checkoutLaterLoading={checkoutLaterLoading}
-                      cartMenu={cartMenu}
-                      chef={chef}
-                      handleIncrement={handleIncrement}
-                      handleDecrement={handleDecrement}
-                      selectedDate={selectedDate}
-                      setSelectedDate={setSelectedDate}
-                      cartView={cartView}
-                      setCartView={setCartView}
-                      deliveryView={deliveryView}
-                      setDeliveryView={setDeliveryView}
-                      reviewView={reviewView}
-                      setReviewView={setReviewView}
-                      handleDelete={handleDelete}
-                      selectedMealQuantityReached={selectedMealQuantityReached}
-                      showMinimumQuantityReached={showMinimumQuantityReached}
-                      addMenuError={addMenuError}
-                      setAddMenuError={setAddMenuError}
-                      openModal={openModal}
-                      handleAddToBag={handleAddToBag}
-                      cartModal={cartModal}
-                      setCartModal={setCartModal}
-                      totalAmount={totalAmount}
-                      closeCartModal={closeCartModal}
-                    />
+                  <QsrCart
+                    handleCheckout={(orderItem: any) =>
+                      handleCheckout(orderItem)
+                    }
+                    handlePayLaterCheckout={(orderItem: any) =>
+                      handlePayLaterCheckout(orderItem)
+                    }
+                    checkoutLoading={checkoutLoading}
+                    checkoutLaterLoading={checkoutLaterLoading}
+                    cartMenu={cartMenu}
+                    chef={chef}
+                    handleIncrement={handleIncrement}
+                    handleDecrement={handleDecrement}
+                    selectedDate={selectedDate}
+                    setSelectedDate={setSelectedDate}
+                    cartView={cartView}
+                    setCartView={setCartView}
+                    deliveryView={deliveryView}
+                    setDeliveryView={setDeliveryView}
+                    reviewView={reviewView}
+                    setReviewView={setReviewView}
+                    handleDelete={handleDelete}
+                    selectedMealQuantityReached={selectedMealQuantityReached}
+                    showMinimumQuantityReached={showMinimumQuantityReached}
+                    addMenuError={addMenuError}
+                    setAddMenuError={setAddMenuError}
+                    openModal={openModal}
+                    handleAddToBag={handleAddToBag}
+                    cartModal={cartModal}
+                    setCartModal={setCartModal}
+                    totalAmount={totalAmount}
+                    closeCartModal={closeCartModal}
+                  />
                 </div>
               </Modal>
-
 
               {/* RESTAURANT DETAILS */}
               <Modal
@@ -838,9 +868,7 @@ const QsrShop = () => {
               >
                 <div className="absolute top-1/2 left-1/2 w-5/6 lg:w-1/3 h-3/4 overflow-auto -translate-y-1/2 -translate-x-1/2 bg-white rounded-3xl p-7 my-10 outline-none">
                   <div className="flex flex-col justify-between items-center p-0 h-full">
-                    <div
-                      className="h-fit my-3 w-100 w-full flex flex-col gap-y-10 min-h-60% lg:min-h-[80%]"
-                    >
+                    <div className="h-fit my-3 w-100 w-full flex flex-col gap-y-10 min-h-60% lg:min-h-[80%]">
                       <div className="flex">
                         <p className="flex-1 text-xl text-center font_bold black2"></p>
                         <IoMdClose
@@ -853,9 +881,7 @@ const QsrShop = () => {
                         />
                       </div>
 
-                      <div
-                        className="flex flex-col justify-center items-center h-full w-full mb-5 h-fit lg:min-h-[80%]"
-                      >
+                      <div className="flex flex-col justify-center items-center h-full w-full mb-5 h-fit lg:min-h-[80%]">
                         <div className="flex flex-col justify-center items-center w-full">
                           <div className="my-6 w-20 lg:w-28 h-20 lg:h-28 border-8 primary_border_color rounded-full flex justify-center items-center">
                             <svg
@@ -892,7 +918,11 @@ const QsrShop = () => {
                 </div>
               </Modal>
 
-              <AlertDialog message='An error has occured, ensure you have an internet connection.' handleClose={handleClose} open={openAlertModal} />
+              <AlertDialog
+                message="An error has occured, ensure you have an internet connection."
+                handleClose={handleClose}
+                open={openAlertModal}
+              />
             </div>
           ) : (
             <NotFound />
