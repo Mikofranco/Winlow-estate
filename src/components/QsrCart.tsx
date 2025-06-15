@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import { useSelector, shallowEqual } from "react-redux";
+import { Modal } from "@mui/material";
 import Button from "./Button";
 import Input from "./CustomInput";
 import { QsrCheckoutValues } from "../utils/FormInitialValue";
@@ -17,6 +18,7 @@ import AlertDialog from "./AlertDialog";
 
 const deliveryFormInputs = [
   { type: "text", placeholder: "Name", name: "name" },
+  { type: "email", placeholder: "Email", name: "email" },
   { type: "text", placeholder: "Phone Number", name: "phoneNumber" },
 ];
 
@@ -183,18 +185,21 @@ const QsrCart = ({
     initialValues: QsrCheckoutValues,
     validationSchema: QsrCheckoutSchema,
     onSubmit: (values) => {
-      // openPayNowModal();
+      openPayNowModal();
 
-      handlePayLaterCheckout({
-        order: cartOrder,
-        totalAmount: totalAmount,
-        discountAmount,
-        ...values,
-        quick_service: chef?.profile?._id,
-        cartMenu,
-      });
+      // handlePayLaterCheckout({
+      //   order: cartOrder,
+      //   totalAmount: totalAmount,
+      //   discountAmount,
+      //   ...values,
+      //   quick_service: chef?.profile?._id,
+      //   cartMenu,
+      // });
     },
   });
+
+  console.log("values", values);
+  console.log("errors", errors);
 
   //   useEffect(() => {
   //     if (cartMenu.length < 1) {
@@ -322,25 +327,21 @@ const QsrCart = ({
                           onChange={handleChange}
                           value={values[input.name as keyof typeof values]}
                           onkeyup={handlePhoneNumber}
-                          error={
-                            errors[input?.name as keyof typeof values] &&
-                            touched[input?.name as keyof typeof values] &&
-                            errors[input?.name as keyof typeof values]
-                          }
+                          error={errors[input?.name as keyof typeof values]}
                         />
                       ))}
                     </div>
                   </div>
 
                   <div className="flex flex-col items-center justify-between gap-y-3">
-                    {/* <Button
+                    <Button
                       title="Pay Now"
                       loading={checkoutLoading}
                       extraClasses="w-full p-3 rounded-full px-8 py-2"
                       onClick={() => {
                         handleSubmit();
                       }}
-                    /> */}
+                    />
 
                     <Button
                       title="Pay with POS"
@@ -391,7 +392,7 @@ const QsrCart = ({
               </>
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center">
-                <p className="text-xl">Nothing to see here...</p>
+                {/* <p className="text-xl">Nothing to see here...</p> */}
               </div>
             )}
           </div>
@@ -445,7 +446,7 @@ const QsrCart = ({
         )} */}
       </div>
 
-      {/* <Modal
+      <Modal
         open={payNowModal}
         onClose={closePayNowModal}
         aria-labelledby="parent-modal-title"
@@ -492,10 +493,11 @@ const QsrCart = ({
                 extraClasses="w-full p-3 rounded-full mt-3"
                 onClick={() => {
                   closePayNowModal();
-                  
+
                   handleCheckout({
                     order: cartOrder,
                     totalAmount: totalAmount + processingFee,
+                    processingFee,
                     discountAmount,
                     ...values,
                     quick_service: chef?.profile?._id,
@@ -506,7 +508,7 @@ const QsrCart = ({
             </div>
           </div>
         </div>
-      </Modal> */}
+      </Modal>
 
       <AlertDialog
         message="Your email and Whatsapp number are required for online payments"

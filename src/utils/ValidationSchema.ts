@@ -127,6 +127,8 @@ export const DineInNewMenuInputsSchema = Yup.object().shape({
   minimumQuantity: Yup.string().required("Minimum quantity is required."),
   description: Yup.string().required("Description is required."),
   ingredients: Yup.string().required("Ingredients is required."),
+  subRecipe: Yup.array().optional(),
+  modifiers: Yup.array().optional(),
   category: Yup.string().required("Category is required."),
   note: Yup.string(),
 });
@@ -140,9 +142,24 @@ export const CashierInputsSchema = Yup.object().shape({
 
 export const DeliveryInputsSchema = Yup.object().shape({
   delivery_city: Yup.string().required("Delivery city is required."),
-  delivery_areas: Yup.array(Yup.string()).min(1, 'At least one delivery area is required').required("Delivery areas are required."),
-  delivery_time: Yup.array(Yup.string()).min(1, 'At least one delivery time is required').required("Delivery time is required."),
+  delivery_areas: Yup.array(Yup.string())
+    .min(1, "At least one delivery area is required")
+    .required("Delivery areas are required."),
+  delivery_time: Yup.array(Yup.string())
+    .min(1, "At least one delivery time is required")
+    .required("Delivery time is required."),
   delivery_fee: Yup.number().required("Delivery fee is required."),
+});
+
+export const ModifiersInputsSchema = Yup.object().shape({
+  item: Yup.string().required("Item is required."),
+  amount: Yup.number()
+    .min(1, "Amount is required")
+    .required("Amount is required."),
+  quantity: Yup.number()
+    .min(1, "Quantity is required")
+    .required("Quantity is required."),
+  required: Yup.boolean().optional(),
 });
 
 export const TerminalInputsSchema = Yup.object().shape({
@@ -176,7 +193,7 @@ export const SupplyInputsSchema = Yup.object().shape({
   category: Yup.array(Yup.string()).required("Category is required."),
   bankName: Yup.string().required("Bank name is required."),
   bankAccountName: Yup.string().required("Bank account name is required."),
-  bankAccountNumber: Yup.number().required("Bank account number is required.")
+  bankAccountNumber: Yup.number().required("Bank account number is required."),
 });
 
 export const SupplierOrderSchema = Yup.object().shape({
@@ -184,16 +201,15 @@ export const SupplierOrderSchema = Yup.object().shape({
   deliveryDate: Yup.date().required("Delivery date is required"),
   note: Yup.string().nullable(),
   send: Yup.string().required("Send status is required"),
-  items: Yup.array().of(
+  items: Yup.array()
+    .of(
       Yup.object().shape({
         item: Yup.string().required("Item is required"),
-        quantity: Yup
-          .number()
+        quantity: Yup.number()
           .positive("Quantity must be greater than 0")
           .integer("Quantity must be a whole number")
           .required("Quantity is required"),
-        total: Yup
-          .number()
+        total: Yup.number()
           .min(0, "Total must be at least 0")
           .required("Total is required"),
       })
@@ -207,7 +223,14 @@ export const HalfInventoryItemSchema = Yup.object().shape({
   category: Yup.string().required("Category is required."),
   unit: Yup.string().required("Unit of Measurement is required."),
   costPerUnit: Yup.number().required("Cost Per Unit is required."),
-  reorderLevel: Yup.string().required("Reorder Level is required.")
+  reorderLevel: Yup.string().required("Reorder Level is required."),
+});
+
+export const InventoryStockSchema = Yup.object().shape({
+  costPerUnit: Yup.number().required("Cost Per Unit is required."),
+  quantity: Yup.number().required("Quantity is required"),
+  reason: Yup.string().required("Reorder Level is required."),
+  otherReason: Yup.string().optional(),
 });
 
 export const InventoryItemSchema = Yup.object().shape({
@@ -216,29 +239,66 @@ export const InventoryItemSchema = Yup.object().shape({
   category: Yup.string().required("Category is required."),
   unit: Yup.string().required("Unit of Measurement is required."),
   costPerUnit: Yup.number().required("Cost Per Unit is required."),
-  reorderLevel: Yup.string().required("Reorder Level is required."),
+  reorderLevel: Yup.number()
+    .typeError("Reorder Level must be a number.")
+    .required("Reorder Level is required."),
   autoReorder: Yup.boolean().default(false),
   autoReorderReminder: Yup.boolean().default(false),
-  reorderQuantity: Yup.string().required("Reorder Quantity is required."),
-  reorderQuantityUnit: Yup.string().required("Reorder Quantity Unit is required."),
+  reorderQuantity: Yup.number()
+    .typeError("Reorder Quantity must be a number.")
+    .required("Reorder Quantity is required.")
+    .test(
+      "is-greater-or-equal",
+      "Reorder Quantity must be greater than or equal to Reorder Level.",
+      function (value) {
+        const { reorderLevel } = this.parent;
+        if (value === undefined || reorderLevel === undefined) return true;
+        return Number(value) >= Number(reorderLevel);
+      }
+    ),
+  // reorderQuantityUnit: Yup.string().required(
+  //   "Reorder Quantity Unit is required."
+  // ),
   supplier: Yup.string().required("Supplier is required."),
 });
 
 export const ManagerInputsSchema = Yup.object().shape({
-  section: Yup.array(Yup.string()).required("Section is required."),
-  subTables: Yup.array(Yup.string()).required("Table is required."),
+  firstName: Yup.string().required("First name is required."),
+  lastName: Yup.string().required("Last name is required."),
+  email: Yup.string().email().required("Email is required."),
+  password: Yup.string()
+    .required("Password is required.")
+    .matches(/\w*[a-z]\w*/, "Password must have a small letter")
+    .matches(/\w*[A-Z]\w*/, "Password must have a capital letter")
+    .matches(/\d/, "Password must have a number")
+    .matches(
+      /[!+@#$%^&*()\-_"=+{}; :,<.>]/,
+      "Password must have a special character"
+    )
+    .min(8, ({ min }) => `Password must be at least ${min} characters`),
+});
+
+export const WaiterInputsSchema = Yup.object().shape({
+  section: Yup.string().required("Section is required."),
   employeeAssigned: Yup.string().required("Employee name is required."),
+  employeeID: Yup.string().required("Employee ID is required."),
+  table: Yup.string().required("Table is required."),
+  whatsappNumber: Yup.string().optional(),
+  password: Yup.string().required("Password is required."),
+});
+
+export const TeamsCashierInputsSchema = Yup.object().shape({
+  section: Yup.string().required("Section is required."),
+  employeeAssigned: Yup.string().required("Employee assigned is required."),
   employeeID: Yup.string().required("Employee ID is required."),
   whatsappNumber: Yup.string().optional(),
   password: Yup.string().required("Password is required."),
 });
 
-export const WaiterInputsSchema = Yup.object().shape({
-  section: Yup.array(Yup.string()).required("Section is required."),
-  subTables: Yup.array(Yup.string()).required("Table is required."),
-  employeeAssigned: Yup.string().required("Employee name is required."),
-  employeeID: Yup.string().required("Employee ID is required."),
-  whatsappNumber: Yup.string().optional(),
+export const TeamsTerminalInputsSchema = Yup.object().shape({
+  name: Yup.string().required("Terminal name is required."),
+  location: Yup.string().required("Terminal location is required."),
+  cashierAssigned: Yup.string().required("Cashier assigned is required."),
   password: Yup.string().required("Password is required."),
 });
 
@@ -285,37 +345,42 @@ export const RecipeSchema = Yup.object().shape({
   category: Yup.string().required("Category is required."),
   description: Yup.string().required("Description is required."),
   quantityUnit: Yup.string().required("Quantity unit is required."),
-  quantity: Yup.number().required("Quantity is required.").min(0, "Quantity cannot be negative"),
-  ingredients: Yup.array().of(
-    Yup.object().shape({
-      item: Yup.string().required("Item is required"),
-      netQuantity: Yup.number()
-        .required("Net Quantity is required")
-        .min(0, "Net Quantity cannot be negative"),
-      netQuantityUnit: Yup.string().required("Net Quantity Unit is required"),
-      wasteQuantity: Yup.number()
-        .required("Waste Quantity is required")
-        .min(0, "Waste Quantity cannot be negative"),
-      wasteQuantityUnit: Yup.string().required("Waste Quantity Unit is required"),
-      // unitCost: Yup.number()
-      //   .required("Unit Cost is required")
-      //   .min(0, "Unit Cost cannot be negative"),
-      // grossQuantity: Yup.number()
-      //   .required("Gross Quantity is required")
-      //   .min(0, "Gross Quantity cannot be negative"),
-      // total: Yup.number()
-      //   .required("Total is required")
-      //   .min(0, "Total cannot be negative"),
-    })
-  )
-  .min(1, "At least one ingredient is required"),
-  prepTime: Yup.number().required("Prep time is required."),
-  prepTimeUnit: Yup.string().required("Prep time unit is required."),
-  cookingTime: Yup.number().required("Cooking time is required."),
-  cookingTimeUnit: Yup.string().required("Cooking timeUnit is required."),
-  timeToCompletion: Yup.number().required("Time to completion is required."),
-  cookingInstructions: Yup.string().required("Cooking instructions is required."),
-  aboutItem: Yup.string().required("About Item is required."),
+  quantity: Yup.number()
+    .required("Quantity is required.")
+    .min(0, "Quantity cannot be negative"),
+  ingredients: Yup.array()
+    .of(
+      Yup.object().shape({
+        item: Yup.string().required("Item is required"),
+        netQuantity: Yup.number()
+          .required("Net Quantity is required")
+          .min(0, "Net Quantity cannot be negative"),
+        netQuantityUnit: Yup.string().required("Net Quantity Unit is required"),
+        wasteQuantity: Yup.number()
+          .required("Waste Quantity is required")
+          .min(0, "Waste Quantity cannot be negative"),
+        wasteQuantityUnit: Yup.string().required(
+          "Waste Quantity Unit is required"
+        ),
+        unitCost: Yup.number()
+          .required("Unit Cost is required")
+          .min(1, "Unit Cost cannot be less than 1"),
+        grossQuantity: Yup.number()
+          .required("Gross Quantity is required")
+          .min(0, "Gross Quantity cannot be negative"),
+        total: Yup.number()
+          .required("Total is required")
+          .min(0, "Total cannot be negative"),
+      })
+    )
+    .min(1, "At least one ingredient is required"),
+  prepTime: Yup.number().optional(),
+  prepTimeUnit: Yup.string().optional(),
+  cookingTime: Yup.number().optional(),
+  cookingTimeUnit: Yup.string().optional(),
+  timeToCompletion: Yup.number().optional(),
+  cookingInstructions: Yup.string().optional(),
+  aboutItem: Yup.string().optional(),
 });
 
 export const IngredientRecipeSchema = Yup.object().shape({
@@ -352,6 +417,7 @@ export const RestaurantCheckoutSchema = Yup.object().shape({
 
 export const QsrCheckoutSchema = Yup.object().shape({
   name: Yup.string().optional(),
+  email: Yup.string().email().required(),
   phoneNumber: Yup.string().optional(),
 });
 

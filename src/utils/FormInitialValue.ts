@@ -88,6 +88,8 @@ export const DineInNewMenuValues = {
   minimumQuantity: "",
   description: "",
   ingredients: "",
+  subRecipe: [],
+  modifiers: [],
   note: "",
   images: "",
 };
@@ -103,7 +105,14 @@ export const deliveryValues = {
   delivery_city: "",
   delivery_areas: [],
   delivery_time: [],
-  delivery_fee: ""
+  delivery_fee: "",
+};
+
+export const modifierValues = {
+  item: "",
+  amount: "",
+  quantity: "",
+  required: false,
 };
 
 export const terminalValues = {
@@ -131,24 +140,14 @@ export const SuperWaiterTableValues = {
 };
 
 export const ManagerValues = {
-  employeeAssigned: "",
-  employeeID: "",
-  section: [],
-  subTables: [],
+  firstName: "",
+  lastName: "",
+  email: "",
   password: "",
-  whatsappNumber: "",
+  passwordText: "",
 };
 
 export const WaiterValues = {
-  section: [],
-  employeeAssigned: "",
-  employeeID: "",
-  subTables: [],
-  password: "",
-  whatsappNumber: "",
-};
-
-export const CashierValues = {
   section: "",
   employeeAssigned: "",
   employeeID: "",
@@ -157,21 +156,27 @@ export const CashierValues = {
   whatsappNumber: "",
 };
 
-export const TerminalValues = {
-  section: [],
+export const TeamsCashierValues = {
+  section: "",
   employeeAssigned: "",
   employeeID: "",
-  subTables: [],
   password: "",
   whatsappNumber: "",
 };
-    
+
+export const TeamsTerminalValues = {
+  name: "",
+  location: "",
+  cashierAssigned: "",
+  password: "",
+};
+
 export const SupplierOrderValues = {
   supplier: "",
   deliveryDate: "",
   note: "",
   send: "",
-  items: []
+  items: [],
 };
 
 export const RecipeValues = {
@@ -187,7 +192,7 @@ export const RecipeValues = {
   cookingTimeUnit: "",
   timeToCompletion: 0,
   cookingInstructions: "",
-  aboutItem: ""
+  aboutItem: "",
 };
 
 export const IngredientRecipeValues = {
@@ -196,9 +201,9 @@ export const IngredientRecipeValues = {
   netQuantityUnit: "",
   wasteQuantity: "",
   wasteQuantityUnit: "",
-  // unitCost: "",
-  // grossQuantity: "",
-  // total: "",
+  unitCost: 0,
+  grossQuantity: 0,
+  total: 0,
 };
 
 export const SupplierValues = {
@@ -209,7 +214,7 @@ export const SupplierValues = {
   bankName: "",
   bankAccountName: "",
   bankAccountNumber: "",
-}
+};
 
 export const HalfInventoryItemValues = {
   name: "",
@@ -218,8 +223,15 @@ export const HalfInventoryItemValues = {
   unit: "",
   costPerUnit: "",
   reorderLevel: "",
-  autoReorder: false
-}
+  autoReorder: false,
+};
+
+export const InventoryStockValues = {
+  costPerUnit: "",
+  quantity: "",
+  reason: "",
+  otherReason: "",
+};
 
 export const InventoryItemValues = {
   name: "",
@@ -233,7 +245,7 @@ export const InventoryItemValues = {
   reorderQuantity: "",
   reorderQuantityUnit: "",
   supplier: "",
-}
+};
 
 export const NewSubscriptionMenuValues = {
   foodName: "",
@@ -266,6 +278,7 @@ export const RestaurantCheckoutValues = {
 
 export const QsrCheckoutValues = {
   name: "",
+  email: "",
   phoneNumber: "",
 };
 

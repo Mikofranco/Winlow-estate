@@ -202,10 +202,13 @@ const QsrShop = () => {
     Hotjar.event("CHEF_SHOP_ADD_MEAL_TO_BAG");
   };
 
-  const verifyTransaction = async (referenceId: any) => {
+  const verifyTransaction = async (
+    referenceId: any,
+    quickServiceId: string
+  ) => {
     try {
       const { data } = await axios.get(
-        `${TRANSACTION_URL}/verify/${referenceId}`
+        `${TRANSACTION_URL}/verify/${referenceId}?restaurantId=${quickServiceId}`
       );
       const result = data?.data;
 
@@ -226,7 +229,7 @@ const QsrShop = () => {
 
     try {
       const createOrEditOrder = async () => {
-        return await createAQsrOrder({ ...orderItem });
+        return await createAQsrOrder({ ...orderItem, salesType: "online" });
       };
 
       const handlePayment = (orderId: string) => {
@@ -245,7 +248,7 @@ const QsrShop = () => {
             setCartMenu([]);
             setOrderId(orderId);
             openVerifyPaymentModal();
-            verifyTransaction(orderId);
+            verifyTransaction(orderId, orderItem.quick_service);
           },
         });
 
