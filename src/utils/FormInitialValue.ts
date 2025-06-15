@@ -88,8 +88,6 @@ export const DineInNewMenuValues = {
   minimumQuantity: "",
   description: "",
   ingredients: "",
-  subRecipe: [],
-  modifiers: [],
   note: "",
   images: "",
 };
@@ -106,13 +104,6 @@ export const deliveryValues = {
   delivery_areas: [],
   delivery_time: [],
   delivery_fee: "",
-};
-
-export const modifierValues = {
-  item: "",
-  amount: "",
-  quantity: "",
-  required: false,
 };
 
 export const terminalValues = {
@@ -140,14 +131,24 @@ export const SuperWaiterTableValues = {
 };
 
 export const ManagerValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
+  employeeAssigned: "",
+  employeeID: "",
+  section: [],
+  subTables: [],
   password: "",
-  passwordText: "",
+  whatsappNumber: "",
 };
 
 export const WaiterValues = {
+  section: [],
+  employeeAssigned: "",
+  employeeID: "",
+  subTables: [],
+  password: "",
+  whatsappNumber: "",
+};
+
+export const CashierValues = {
   section: "",
   employeeAssigned: "",
   employeeID: "",
@@ -156,19 +157,13 @@ export const WaiterValues = {
   whatsappNumber: "",
 };
 
-export const TeamsCashierValues = {
-  section: "",
+export const TerminalValues = {
+  section: [],
   employeeAssigned: "",
   employeeID: "",
+  subTables: [],
   password: "",
   whatsappNumber: "",
-};
-
-export const TeamsTerminalValues = {
-  name: "",
-  location: "",
-  cashierAssigned: "",
-  password: "",
 };
 
 export const SupplierOrderValues = {
@@ -201,9 +196,9 @@ export const IngredientRecipeValues = {
   netQuantityUnit: "",
   wasteQuantity: "",
   wasteQuantityUnit: "",
-  unitCost: 0,
-  grossQuantity: 0,
-  total: 0,
+  // unitCost: "",
+  // grossQuantity: "",
+  // total: "",
 };
 
 export const SupplierValues = {
@@ -224,13 +219,6 @@ export const HalfInventoryItemValues = {
   costPerUnit: "",
   reorderLevel: "",
   autoReorder: false,
-};
-
-export const InventoryStockValues = {
-  costPerUnit: "",
-  quantity: "",
-  reason: "",
-  otherReason: "",
 };
 
 export const InventoryItemValues = {
