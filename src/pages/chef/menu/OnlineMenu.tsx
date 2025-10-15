@@ -348,7 +348,7 @@ const OnlineMenu = () => {
                       </div> */}
                     </div>
 
-                    <div className="">
+                    <div className="flex gap-2">
                       <OutlineButton
                         title="Add a new menu"
                         extraClasses="w-52 px-8 py-2"
@@ -360,6 +360,23 @@ const OnlineMenu = () => {
                           setDiscountValue();
                           openMenuModal();
                         }}
+                      />
+                      <Button
+                        title={"Modifiers"}
+                        extraClasses="!w-1/2 !px-6"
+                        disabled={menu?.hide}
+                        // onClick={onClickCopy}
+                      />
+                      <Button
+                        title={"Ingredients"}
+                        extraClasses="!w-1/2 !px-6"
+                        disabled={menu?.hide}
+                        // onClick={onClickCopy}
+                      /><Button
+                        title={"Categories"}
+                        extraClasses="!w-1/2 !px-6"
+                        disabled={menu?.hide}
+                        // onClick={onClickCopy}
                       />
                     </div>
                   </div>
