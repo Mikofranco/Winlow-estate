@@ -1,70 +1,123 @@
-# Getting Started with Create React App
+# Winlow Estate
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Winlow Estate is a modern web application built with React and TypeScript, designed to manage estate-related operations such as resident management, dashboards, and user authentication. The project leverages Vite for fast development and building, Tailwind CSS for styling, and Radix UI components for accessible and customizable UI elements.
 
-## Available Scripts
+## Table of Contents
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Scripts](#scripts)
+- [Dependencies](#dependencies)
+- [Development Dependencies](#development-dependencies)
+- [Contributing](#contributing)
+- [License](#license)
 
-In the project directory, you can run:
+## Features
+- **Dashboard**: A comprehensive dashboard for estate management insights.
+- **Resident Management**: Add, edit, and view residents with a responsive table.
+- **Authentication**: Secure user authentication via AuthContext.
+- **Responsive UI**: Built with Tailwind CSS and Radix UI components for accessibility and responsiveness.
+- **Modals and Navigation**: Includes modals for adding/editing residents and a navigation menu for seamless user experience.
+- **Animations**: Smooth transitions and animations using Framer Motion.
 
-### `npm start`
+## Project Structure
+```plaintext
+winlow-estate/
+├── src/
+│   ├── assets/                     # Static assets like images and SVGs
+│   │   └── react.svg
+│   ├── components/                 # Reusable React components
+│   │   ├── ui/                    # Radix UI-based components
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── checkbox.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── dropdown-menu.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── label.tsx
+│   │   │   ├── navigation-menu.tsx
+│   │   │   ├── select.tsx
+│   │   │   ├── table.tsx
+│   │   ├── AddResidentModal.tsx
+│   │   ├── AppButton.tsx
+│   │   ├── DashBoardCard.tsx
+│   │   ├── EditResidentModal.tsx
+│   │   ├── Layout.tsx
+│   │   ├── Sidebar.tsx
+│   │   ├── Toast.tsx
+│   │   ├── UserInfo.tsx
+│   ├── context/                    # React context for state management
+│   │   └── AuthContext.tsx
+│   ├── data/                      # Mock data and constants
+│   │   ├── mockUsers.ts
+│   │   ├── residents.ts
+│   ├── lib/                       # Utility functions
+│   │   └── utils.ts
+│   ├── pages/                     # Page components for routing
+│   │   ├── Dashboard.tsx
+│   │   ├── Login.tsx
+│   │   ├── Residents.tsx
+│   │   ├── Settings.tsx
+│   ├── table/                     # Table-related components
+│   │   └── ResidentsTable.tsx
+│   ├── App.css                    # Global CSS styles
+│   ├── App.tsx                    # Main App component
+│   ├── index.css                  # Entry CSS file
+│   ├── main.tsx                   # Entry point for React
+├── package.json                   # Project metadata and dependencies
+├── README.md                      # This file
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Clone the repository:
+bashgit clone <repository-url>
+cd winlow-estate
 
-### `npm run build`
+Install dependencies:
+bashnpm install
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Set up environment:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+No additional environment variables are required for the basic setup. If needed, create a .env file based on your requirements.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+Run the development server:
+bashnpm run dev
+The app will be available at http://localhost:5173 (or another port if configured).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Scripts
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+npm run dev: Starts the Vite development server.
+npm run build: Builds the app for production with TypeScript compilation.
+npm run lint: Runs ESLint to check for code quality issues.
+npm run preview: Previews the production build locally.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Dependencies
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+React & React DOM: Core libraries for building the UI (^19.1.1).
+React Router DOM: For client-side routing (^7.9.4).
+Radix UI Components: Accessible UI primitives for buttons, dialogs, dropdowns, etc.
+Tailwind CSS: Utility-first CSS framework for styling.
+Framer Motion: For animations and transitions (^12.23.24).
+Lucide React: Icon library for React (^0.548.0).
+Class Variance Authority & Tailwind Merge: For managing Tailwind CSS classes dynamically.
+Full list in package.json.
 
-## Learn More
+Development Dependencies
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+TypeScript: For type-safe JavaScript (~5.9.3).
+Vite: Fast build tool and development server (^7.1.7).
+ESLint: For linting and maintaining code quality.
+Autoprefixer & PostCSS: For CSS vendor prefixing and processing.
+@vitejs/plugin-react: React plugin for Vite.
+Full list in package.json.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Contributing
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Fork the repository.
+Create a new branch (git checkout -b feature/your-feature).
+Make your changes and commit (git commit -m "Add your feature").
+Push to the branch (git push origin feature/your-feature).
+Open a pull request.
