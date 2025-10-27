@@ -26,7 +26,11 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "typeRoots": ["./src/types"],
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["src/**/*", "src/vite-env.d.ts"]
 }

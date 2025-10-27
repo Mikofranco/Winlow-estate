@@ -22,22 +22,22 @@
 }
 
 .font_regular {
-  font-family: Gilroy_Regular;
+  font-family: poppins, ;
 }
 
 .font_bold {
-  font-family: Gilroy_Bold;
+  font-family: poppins;
 }
 
 .font_medium {
-  font-family: Gilroy_Medium;
+  font-family: poppins;
 }
 
 .font_light {
-  font-family: Gilroy_Light;
+  font-family: poppins;
 }
 .font_heavy {
-  font-family: Gilroy_Heavy;
+  font-family: poppins;
 }
 
 .bg_primary {
